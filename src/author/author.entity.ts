@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 
 @Entity()
 
@@ -8,9 +8,9 @@ export class Author {
 
     @Column()
     password: string;
-    
-    @Column()
+
+    @Column({ unique: true })
     username: string;
 
-    
+
 }
