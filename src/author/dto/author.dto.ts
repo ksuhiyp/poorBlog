@@ -12,6 +12,6 @@ export class AuthorDto {
     @MaxLength(16)
     @IsNotEmpty()
     @IsOptional()
-    readonly password?: string;
+    password?: string;
 
 }

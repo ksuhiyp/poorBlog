@@ -9,9 +9,10 @@ export class AuthenticationService {
     async validateUser(username: string, password: string) {
         const author = await this.authorService.findByUsername(username);
 
-        if (author && await this.validatePassowrd(password, author.pop())) {
+        if (author.length && await this.validatePassowrd(password, author.pop())) {
             return author;
-        } else { return null }
+        }
+        return null;
     }
 
     private validatePassowrd(password: string, user: AuthorDto): Promise<boolean> {

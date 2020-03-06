@@ -1,7 +1,8 @@
-import { Controller, Get, Param, Post, Body, Put, Query, BadRequestException, NotFoundException, HttpStatus, Delete } from '@nestjs/common';
+import { Controller, Get, Param, Post, Body, Put, Query, BadRequestException, NotFoundException, HttpStatus, Delete, UsePipes } from '@nestjs/common';
 import { AuthorService } from './author.service';
 import { AuthorDto } from './dto/author.dto';
 import { Author } from './author.entity';
+import { HashPasswordPipe } from 'src/common/pipes/hash-password.pipe';
 
 @Controller('author')
 export class AuthorController {
@@ -18,11 +19,10 @@ export class AuthorController {
         }
         return authors.pop();
     }
-
+    @UsePipes(HashPasswordPipe)
     @Post('')
     async  create(@Body() author: AuthorDto): Promise<void> {
-        // todo: check if author table has author
-        const authors = await this.authorService.findByUsername(author.username );
+        const authors = await this.authorService.findByUsername(author.username);
         if (authors.length) {
             throw new BadRequestException(`Username ${author.username} already exists`);
         }

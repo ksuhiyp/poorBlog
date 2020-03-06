@@ -1,17 +1,17 @@
 import { Injectable, PipeTransform, ArgumentMetadata, InternalServerErrorException } from "@nestjs/common";
 import * as bcrypt from 'bcrypt'
+import { AuthorDto } from "src/author/dto/author.dto";
 
 @Injectable()
 export class HashPasswordPipe implements PipeTransform {
 
-    transform(plainPassword: string, metadata: ArgumentMetadata) {
+    transform(user: AuthorDto, metadata: ArgumentMetadata) {
+        const plainPassword = user.password;
         const saltRounds = 10;
-        bcrypt.hash(plainPassword, saltRounds, (err, hash) => {
-            if (err) {
-                throw new InternalServerErrorException(err);
-            }
-            return hash;
-        })
-
+        const hash = bcrypt.hashSync(plainPassword, saltRounds)
+        user.password = hash;
+        return user;
     }
+
+
 }
