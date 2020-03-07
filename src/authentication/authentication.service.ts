@@ -9,13 +9,13 @@ export class AuthenticationService {
     async validateUser(username: string, password: string) {
         const author = await this.authorService.findByUsername(username);
 
-        if (author.length && await this.validatePassowrd(password, author.pop())) {
+        if (author.length && this.validatePassowrd(password, author[0].password)) {
             return author;
         }
         return null;
     }
 
-    private validatePassowrd(password: string, user: AuthorDto): Promise<boolean> {
-        return bcrypt.compare(user.password, password);
+    private validatePassowrd(password: string, hash: string): boolean {
+        return bcrypt.compareSync(password, hash);
     }
 }

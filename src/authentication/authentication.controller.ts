@@ -2,12 +2,11 @@ import { Controller, Post, UseGuards, Request, Body, UsePipes, ValidationPipe } 
 import { AuthGuard } from '@nestjs/passport';
 import { AuthorDto } from 'src/author/dto/author.dto';
 
-@Controller('authentication')
+@Controller('auth')
 export class AuthenticationController {
-    @UsePipes(ValidationPipe)
     @UseGuards(AuthGuard('local'))
-    @Post('login')
-    async login(@Request() req, @Body() user: AuthorDto) {
+    @Post('/login')
+    async login(@Request() req) {
         return req.user
     }
 }

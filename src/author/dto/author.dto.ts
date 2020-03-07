@@ -9,9 +9,13 @@ export class AuthorDto {
     readonly username?: string;
     @IsString()
     @MinLength(6)
-    @MaxLength(16)
+    @MaxLength(32)
     @IsNotEmpty()
     @IsOptional()
     password?: string;
+    @IsString()
+    @IsNotEmpty()
+    @IsOptional()
+    salt?: string;
 
 }

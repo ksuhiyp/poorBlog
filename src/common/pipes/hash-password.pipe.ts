@@ -8,7 +8,8 @@ export class HashPasswordPipe implements PipeTransform {
     transform(user: AuthorDto, metadata: ArgumentMetadata) {
         const plainPassword = user.password;
         const saltRounds = 10;
-        const hash = bcrypt.hashSync(plainPassword, saltRounds)
+        const salt = bcrypt.genSaltSync(saltRounds);
+        const hash = bcrypt.hashSync(plainPassword, salt);
         user.password = hash;
         return user;
     }
