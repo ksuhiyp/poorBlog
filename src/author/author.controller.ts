@@ -2,7 +2,7 @@ import { Controller, Get, Param, Post, Body, Put, Query, BadRequestException, No
 import { AuthorService } from './author.service';
 import { AuthorDto } from './dto/author.dto';
 import { Author } from './author.entity';
-import { HashPasswordPipe } from 'src/common/pipes/hash-password.pipe';
+import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';
 
 @Controller('author')

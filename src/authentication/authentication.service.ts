@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { AuthorService } from 'src/author/author.service';
-import { AuthorDto } from 'src/author/dto/author.dto';
+import { AuthorService } from '../author/author.service';
 import * as bcrypt from 'bcrypt'
 import { Author } from 'src/author/author.entity';
 import { JwtService } from '@nestjs/jwt'
+import { AuthorDto } from 'src/author/dto/author.dto';
 @Injectable()
 export class AuthenticationService {
     constructor(private readonly authorService: AuthorService, private readonly jwtService: JwtService) { }
@@ -22,7 +22,7 @@ export class AuthenticationService {
         return bcrypt.compareSync(password, hash);
     }
 
-    login(author: Author) {
+    login(author: AuthorDto) {
         const payload = { username: author.username, sub: author.password }
         return {
             access_token: this.jwtService.sign(payload)

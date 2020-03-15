@@ -8,10 +8,8 @@ export class AuthenticationController {
     constructor(private readonly authenticationService: AuthenticationService) { }
     @UseGuards(AuthGuard('local'))
     @Post('/login')
-    async login(@Request() req, @Res() res: Response) {
-        const payload = this.authenticationService.login(req.user);
-        res.set('Authorization', 'Bearer ' + payload.access_token);
-        res.send();
+    async login(@Request() req) {
+        return this.authenticationService.login(req.user);
 
     }
 }
