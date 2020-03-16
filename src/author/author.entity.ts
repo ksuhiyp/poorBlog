@@ -4,7 +4,7 @@ import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
 
 export class Author {
     @PrimaryGeneratedColumn()
-    id: number;
+    id?: number;
 
     @Column()
     password: string;

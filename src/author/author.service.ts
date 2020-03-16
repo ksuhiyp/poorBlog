@@ -1,7 +1,7 @@
 import { Injectable, HttpException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Author } from './author.entity';
-import { Repository, InsertResult, DeleteResult } from 'typeorm';
+import { Repository, InsertResult, DeleteResult, UpdateResult } from 'typeorm';
 import { AuthorDto } from './dto/author.dto';
 @Injectable()
 export class AuthorService {
@@ -14,7 +14,7 @@ export class AuthorService {
     findById(id: number): Promise<Author> {
         return this.authorRepository.findOne(id);
     }
-    private findOne(id: number): Promise<Author> {
+    findOne(id: number): Promise<Author> {
         return this.authorRepository.findOneOrFail(id);
     }
 
@@ -26,16 +26,12 @@ export class AuthorService {
         return this.authorRepository.insert(author);
     }
 
-    async update(id, author: AuthorDto): Promise<AuthorDto> {
-        const oldAuthor = await this.findOne(id);
-        this.authorRepository.update({ id }, author);
-        return oldAuthor;
+    async update(id, author: AuthorDto): Promise<UpdateResult> {
+        return this.authorRepository.update({ id }, author);
+
     }
     async delete(id: number): Promise<DeleteResult> {
-        const author = await this.findById(id);
-        if (!author) {
-            throw new BadRequestException(`Author with id of ${id} was not found`)
-        }
-        return this.authorRepository.delete(author.id);
+     
+        return this.authorRepository.delete(id);
     }
 }

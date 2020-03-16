@@ -36,14 +36,21 @@ export class AuthorController {
     }
     @UseGuards(AuthGuard('jwt'))
     @Put(':id')
-    async update(@Body() author: AuthorDto, @Param('id') id: number): Promise<AuthorDto> {
-        return await this.authorService.update(id, author);
-
+    async update(@Body() updatedAuthor: AuthorDto, @Param('id') id: number): Promise<AuthorDto> {
+        const author = await this.authorService.findOne(id);
+        if (!author) {
+            throw new BadRequestException(`Author id:${id} not found`)
+        }
+        await this.authorService.update(id, updatedAuthor);
+        return updatedAuthor
     }
 
     @Delete(':id')
     async delete(@Param('id') id: number) {
-
+        const author = await this.authorService.findOne(id);
+        if (!author) {
+            throw new BadRequestException(`Author id:${id} not found`)
+        }
         await this.authorService.delete(id);
     }
 
