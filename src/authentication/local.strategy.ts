@@ -13,11 +13,11 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
         if (typeof username != 'string' || typeof password != 'string') {
             throw new UnauthorizedException();
         }
-            const author = await this.authenticationService.validateUser(username, password);
+            const user = await this.authenticationService.validateUser(username, password);
 
-        if (!author) {
+        if (!user) {
             throw new UnauthorizedException();
         }
-        return author;
+        return user;
     }
 } 

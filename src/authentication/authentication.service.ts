@@ -1,19 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { AuthorService } from '../author/author.service';
+import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt'
-import { Author } from 'src/author/author.entity';
+import { User } from 'src/entities/user.entity';
 import { JwtService } from '@nestjs/jwt'
-import { AuthorDto } from 'src/author/dto/author.dto';
+import { UserLoginDTO } from 'src/user/dto/user.dto';
 @Injectable()
 export class AuthenticationService {
-    constructor(private readonly authorService: AuthorService, private readonly jwtService: JwtService) { }
+    constructor(private readonly userService: UserService, private readonly jwtService: JwtService) { }
 
     async validateUser(username: string, password: string) {
-        const author = await this.authorService.findByUsername(username);
+        const user = await this.userService.findByUsername(username);
 
-        if (author.length && this.validatePassowrd(password, author[0].password)) {
-            delete author[0].password;
-            return author;
+        if (user.length && this.validatePassowrd(password, user[0].password)) {
+            delete user[0].password;
+            return user;
         }
         return null;
     }
@@ -22,8 +22,8 @@ export class AuthenticationService {
         return bcrypt.compareSync(password, hash);
     }
 
-    login(author: AuthorDto) {
-        const payload = { username: author.username, sub: author.password }
+    login(user: UserLoginDTO) {
+        const payload = { username: user.username, sub: user.password }
         return {
             access_token: this.jwtService.sign(payload)
         };
