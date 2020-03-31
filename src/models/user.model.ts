@@ -5,7 +5,11 @@ import {
   IsNotEmpty,
   IsLowercase,
   IsOptional,
+  IsUrl,
 } from 'class-validator';
+import { User } from 'src/entities/user.entity';
+import { isString } from 'util';
+import { Article } from 'src/entities/article.entity';
 
 export class UserRegistrationDTO {
   @IsString()
@@ -41,6 +45,23 @@ export class UserUpdateDTO {
   @IsNotEmpty()
   @IsOptional()
   password?: string;
+
+  @IsString()
+  @MaxLength(100)
+  @IsOptional()
+  bio?: string;
+
+  @IsUrl()
+  @IsOptional()
+  photo?: string;
 }
 
-
+export interface UserResponseDTO  {
+  readonly id: number;
+  readonly username: string;
+  readonly bio?: string;
+  readonly photo?: string;
+  readonly articles?: Number[];
+  readonly createdAt?: Date;
+  readonly updatedAt?: Date;
+}

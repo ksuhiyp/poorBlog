@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication, HttpStatus } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
-
 import { AppModule } from '../src/app.module';
 
 
@@ -93,69 +92,6 @@ describe('AppController (e2e)', () => {
         });
       });
     });
-    // });
-
-    // describe('/user/:username (GET)', () => {
-    //   it('Should return user', () => {
-    //     return request(app.getHttpServer())
-
-    //       .get('/user/suhayb')
-
-    //   });
-
-    // });
-
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
-    // describe('', () => {
-    //   it('Should ...', () => { })
-    // });
    
   });
   describe('Auhtentication Controller', () => {

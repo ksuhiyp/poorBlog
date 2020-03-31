@@ -15,7 +15,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRegistrationDTO, UserUpdateDTO } from './dto/user.dto';
+import { UserRegistrationDTO, UserUpdateDTO } from '../models/user.model';
 import { User } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';

@@ -3,6 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { DatabaseService } from './database.service';
 import { User } from '../../entities/user.entity';
+import { Article } from '../../entities/article.entity';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { User } from '../../entities/user.entity';
         process.env.NODE_ENV === 'production'
           ? process.env.PROD_DATABASE
           : process.env.TESTING_DATABASE,
-      entities: [User],
+      entities: [User,Article],
       name:
         process.env.NODE_ENV === 'production'
           ? process.env.DB_CONNECTION_NAME

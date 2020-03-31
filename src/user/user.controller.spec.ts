@@ -5,13 +5,11 @@ import { User } from '../entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
-import { resolve } from 'dns';
-import { BadRequestException, NotFoundException } from '@nestjs/common';
 
 describe('User Controller', () => {
   let controller: UserController;
   let service: UserService;
-  let user: User;
+  let user;
   beforeEach(async () => {
     user = { username: 'test', password: 'test' };
 

@@ -2,7 +2,7 @@ import { Injectable, HttpException, InternalServerErrorException, BadRequestExce
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
 import { Repository, InsertResult, DeleteResult, UpdateResult } from 'typeorm';
-import {  UserRegistrationDTO, UserUpdateDTO } from './dto/user.dto';
+import { UserRegistrationDTO, UserUpdateDTO } from 'src/models/user.model';
 @Injectable()
 export class UserService {
     constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) { }

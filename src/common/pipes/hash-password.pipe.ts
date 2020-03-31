@@ -5,7 +5,7 @@ import {
   InternalServerErrorException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
-import { UserLoginDTO } from 'src/user/dto/user.dto';
+import { UserLoginDTO } from 'src/models/user.model';
 
 @Injectable()
 export class HashPasswordPipe implements PipeTransform {
