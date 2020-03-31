@@ -13,8 +13,8 @@ export class AuthenticationService {
   async validateUser(username: string, password: string) {
     const user = await this.userService.findByUsername(username);
 
-    if (user.length && this.validatePassowrd(password, user[0].password)) {
-      delete user[0].password;
+    if (user && this.validatePassowrd(password, user.password)) {
+      delete user.password;
       return user;
     }
     return null;

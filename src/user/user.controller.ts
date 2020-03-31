@@ -5,17 +5,19 @@ import {
   Post,
   Body,
   Put,
-  Query,
   BadRequestException,
   NotFoundException,
-  HttpStatus,
   Delete,
   UsePipes,
   UseGuards,
   ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import { UserRegistrationDTO, UserUpdateDTO } from '../models/user.model';
+import {
+  UserRegistrationDTO,
+  UserUpdateDTO,
+  UserResponseDTO,
+} from '../models/user.model';
 import { User } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';
@@ -26,24 +28,24 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/all')
-  async getAll(): Promise<User[]> {
-    return await this.userService.findAll();
+  async getAll(): Promise<UserResponseDTO[]> {
+    return await (await this.userService.findAll()).map(user => user.toJson());
   }
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':username')
   async findByUserName(@Param('username') username: string): Promise<User> {
-    const users = await this.userService.findByUsername(username);
-    if (!users.length) {
+    const user = await this.userService.findByUsername(username);
+    if (!user) {
       throw new NotFoundException(`User ${username} not found!`);
     }
-    return users.pop();
+    return user;
   }
   @UsePipes(HashPasswordPipe)
   @Post('')
   async create(@Body() user: UserRegistrationDTO): Promise<void> {
-    const users = await this.userService.findByUsername(user.username);
-    if (users.length) {
+    const _user = await this.userService.findByUsername(user.username);
+    if (_user) {
       throw new ConflictException(`Username ${user.username} already exists`);
     }
     await this.userService.create(user);

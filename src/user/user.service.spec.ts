@@ -63,10 +63,10 @@ describe('UserService', () => {
   describe('findByUsername', () => {
     it('should return an array of user', () => {
       jest.spyOn(service, 'findByUsername');
-      const find = jest.spyOn(repo, 'find');
+      const find = jest.spyOn(repo, 'findOne');
       const result = service.findByUsername('test');
       expect(find).toBeCalledWith({ where: { username: userRes.username } });
-      return expect(result).resolves.toMatchObject([userRes]);
+      return expect(result).resolves.toMatchObject(userRes);
     });
   });
   describe('findOne', () => {
