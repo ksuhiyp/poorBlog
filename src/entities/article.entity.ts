@@ -20,6 +20,8 @@ export class Article extends AbstractEntity {
   body: string;
   @ManyToOne(type => User)
   author: string;
+  @Column()
+  describtion: string;
   // @Column() tag
   // @Column() comments
   // @Column() description
