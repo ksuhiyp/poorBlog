@@ -8,7 +8,7 @@ import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   providers: [AuthenticationService, LocalStrategy,JwtStrategy],
-  imports: [UserModule, AuthenticationModule,
+  imports: [UserModule,
     JwtModule.register({ secret: 'poorblogsecret', signOptions: { expiresIn: '1w' } })],
   controllers: [AuthenticationController]
 })

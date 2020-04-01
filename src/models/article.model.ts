@@ -1,6 +1,7 @@
 import { IsOptional, IsNumber, IsString, IsNotEmpty } from 'class-validator';
 import { isString } from 'util';
 import { FindOptionsUtils, WhereExpression, OrderByCondition } from 'typeorm';
+import { User } from 'src/entities/user.entity';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -33,6 +34,7 @@ export class CreateArticleDTO {
   tags: string[];
   @IsOptional()
   describtion: string;
+  
 }
 
 export class UpdateArticleDTO {

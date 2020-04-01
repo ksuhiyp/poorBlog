@@ -9,6 +9,7 @@ import {
 import { AbstractEntity } from './abstract.entity';
 import { User } from './user.entity';
 import slugify from 'slugify';
+import { IsOptional } from 'class-validator';
 
 @Entity()
 export class Article extends AbstractEntity {
@@ -19,20 +20,19 @@ export class Article extends AbstractEntity {
   @Column()
   body: string;
   @ManyToOne(type => User)
-  author: string;
-  @Column()
+  author: User;
+  @Column({ nullable: true })
+  @IsOptional()
   describtion: string;
   // @Column() tag
   // @Column() comments
   // @Column() description
   // @Column()
   @BeforeInsert()
-  @BeforeUpdate()
-  private titleToSlug(): string {
-    return (
+  titleToSlug(): void {
+    this.slug =
       slugify(this.title, { lower: true }) +
       '-' +
-      ((Math.random() * Math.pow(36, 6)) | 0).toString(36)
-    );
+      ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 }

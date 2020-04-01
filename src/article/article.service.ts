@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Article } from 'src/entities/article.entity';
 import { Repository, InsertResult, UpdateResult, DeleteResult } from 'typeorm';
@@ -8,6 +8,7 @@ import {
   UpdateArticleDTO,
   CreateArticleDTO,
 } from 'src/models/article.model';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ArticleService {
@@ -18,14 +19,23 @@ export class ArticleService {
     return this.repo.findOne({ where: { query } });
   }
   getArticles(query?: GetArticlesQuery): Promise<Article[]> {
-    return this.repo.find(query);
+    return this.repo.find({ ...query, relations: ['author'] });
   }
-  createArticle(article: CreateArticleDTO): Promise<Article> {
+  createArticle(article: CreateArticleDTO, author: User): Promise<Article> {
     const entity = this.repo.create(article);
+    entity.author.id = author.id;
     return this.repo.save(entity);
   }
-  updateArticle(id: number, data: UpdateArticleDTO): Promise<UpdateResult> {
-    return this.repo.update({ id }, data);
+  async updateArticle(
+    id: number,
+    data: UpdateArticleDTO,
+    user: User,
+  ): Promise<UpdateResult> {
+    const article = await this.repo.findOne(id, { relations: ['author'] });
+    if (user.id === article.author.id) {
+      return this.repo.update({ id }, data);
+    }
+    throw new ForbiddenException();
   }
   deleteArticle(id: number): Promise<DeleteResult> {
     return this.repo.delete(id);
