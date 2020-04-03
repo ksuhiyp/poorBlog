@@ -1,7 +1,7 @@
-import { TransformerInterceptor } from './plain-to-class.interceptor';
+import { PlainToClassInterceptor } from '../../common/interceptors/plain-to-class.interceptor';
 
 describe('TransformerInterceptor', () => {
   it('should be defined', () => {
-    expect(new TransformerInterceptor()).toBeDefined();
+    expect(new PlainToClassInterceptor()).toBeDefined();
   });
 });

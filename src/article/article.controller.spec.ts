@@ -174,8 +174,7 @@ describe('Article Controller', () => {
           Promise.resolve<DeleteResult>({ raw: '', affected: 1 }),
         );
       const result = controller.deleteArticle(1, user);
-
-    return  expect(result).resolves.toEqual({ raw: '', affected: 1 });
+      return expect(result).resolves.toEqual({ raw: '', affected: 1 });
     });
   });
 });
