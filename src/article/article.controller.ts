@@ -10,18 +10,19 @@ import {
   Req,
   Put,
   UseInterceptors,
+  Delete,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { Article } from 'src/entities/article.entity';
+import { Article } from '../entities/article.entity';
 import {
   GetArticlesQuery,
   CreateArticleDTO,
   UpdateArticleDTO,
-} from 'src/models/article.model';
+} from '../models/article.model';
 import { AuthGuard } from '@nestjs/passport';
-import { UserParam } from 'src/common/decorators/user.decorator';
-import { User } from 'src/entities/user.entity';
-import { PlainToClassInterceptor } from 'src/common/interceptors/plain-to-class.interceptor';
+import { UserParam } from '../common/decorators/user.decorator';
+import { User } from '../entities/user.entity';
+import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.interceptor';
 
 @Controller('articles')
 export class ArticleController {
@@ -40,7 +41,7 @@ export class ArticleController {
   async articles(@Query() query: GetArticlesQuery) {
     const articles = await this.articleService.getArticles(query);
     return articles;
-  }
+  } 
   @Post()
   @UseGuards(AuthGuard('jwt'))
   async createArticle(@Body() body: CreateArticleDTO, @UserParam() user: User) {
@@ -55,5 +56,11 @@ export class ArticleController {
     @Param('id') id: number,
   ) {
     return this.articleService.updateArticle(id, body, user);
+  }
+
+  @Delete(':id')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteArticle(@Param('id') id: number, @UserParam() user: User) {
+    return await this.articleService.deleteArticle(id, user);
   }
 }

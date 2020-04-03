@@ -31,7 +31,7 @@ export class CreateArticleDTO {
   @IsNotEmpty()
   body: string;
   @IsOptional()
-  tags: string[];
+  tags?: string[];
   @IsOptional()
   describtion: string;
   

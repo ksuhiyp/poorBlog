@@ -1,7 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Article } from 'src/entities/article.entity';
-import { Repository, InsertResult, UpdateResult, DeleteResult } from 'typeorm';
+import { Article } from '../entities/article.entity';
+import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
   GetArticlesQuery,
@@ -12,9 +12,7 @@ import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class ArticleService {
-  constructor(
-    @InjectRepository(Article) private readonly repo: Repository<Article>,
-  ) {}
+  constructor(@InjectRepository(Article) private repo: Repository<Article>) {}
   getArticle(query?: GetArticleByIdOrSlugQuery): Promise<Article> {
     return this.repo.findOne({ where: { query } });
   }
@@ -23,7 +21,7 @@ export class ArticleService {
   }
   createArticle(article: CreateArticleDTO, author: User): Promise<Article> {
     const entity = this.repo.create(article);
-    entity.author.id = author.id;
+    entity.author = author;
     return this.repo.save(entity);
   }
   async updateArticle(
@@ -37,7 +35,18 @@ export class ArticleService {
     }
     throw new ForbiddenException();
   }
-  deleteArticle(id: number): Promise<DeleteResult> {
-    return this.repo.delete(id);
+  async deleteArticle(id: number, user: User): Promise<DeleteResult> {
+    const article = await this.repo.findOneOrFail(id, {
+      relations: ['author'],
+    });
+    if (this.isArticleAuthor(user.id, article.author?.id))
+      return this.repo.delete(id);
+    throw new ForbiddenException(
+      `User ${user.username} doesn\'t own article ${article.slug}`,
+    );
+  }
+
+  private isArticleAuthor(userId: number, authorId: number): boolean {
+    return userId === authorId ? true : false;
   }
 }
