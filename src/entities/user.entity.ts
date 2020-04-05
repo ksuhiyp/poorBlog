@@ -37,7 +37,7 @@ export class User extends AbstractEntity {
   )
   articles?: Article[];
 
-   toJson(): UserResponseDTO {
+   toJson?(): UserResponseDTO {
     return <UserResponseDTO>classToPlain(this);
   }
 

@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { IsOptional } from 'class-validator';
 
 @Entity()
 export class AbstractEntity {
@@ -14,5 +15,6 @@ export class AbstractEntity {
   createdAt: Date;
 
   @UpdateDateColumn({ type: Date })
-  updatedAt: Date;
+  @IsOptional()
+  updatedAt?: Date;
 }

@@ -34,7 +34,6 @@ export class CreateArticleDTO {
   tags?: string[];
   @IsOptional()
   describtion: string;
-  
 }
 
 export class UpdateArticleDTO {
@@ -48,4 +47,8 @@ export class UpdateArticleDTO {
   tags?: string[];
   @IsOptional()
   describtion?: string;
+}
+
+export interface articleResponseDTO {
+
 }

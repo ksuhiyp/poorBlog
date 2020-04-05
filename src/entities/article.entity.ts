@@ -14,7 +14,7 @@ import { IsOptional } from 'class-validator';
 @Entity()
 export class Article extends AbstractEntity {
   @Column()
-  slug: string;
+  slug?: string;
   @Column()
   title: string;
   @Column()
@@ -31,7 +31,7 @@ export class Article extends AbstractEntity {
   // @Column() description
   // @Column()
   @BeforeInsert()
-  titleToSlug(): void {
+  titleToSlug?(): void {
     this.slug =
       slugify(this.title, { lower: true }) +
       '-' +

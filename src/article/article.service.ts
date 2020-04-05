@@ -14,7 +14,13 @@ import { User } from 'src/entities/user.entity';
 export class ArticleService {
   constructor(@InjectRepository(Article) private repo: Repository<Article>) {}
   getArticle(query?: GetArticleByIdOrSlugQuery): Promise<Article> {
-    return this.repo.findOne({ where: { query } });
+    return this.repo.findOneOrFail({
+      where: {
+        ...
+        query
+      },
+      relations: ['author'],
+    });
   }
   getArticles(query?: GetArticlesQuery): Promise<Article[]> {
     return this.repo.find({ ...query, relations: ['author'] });
