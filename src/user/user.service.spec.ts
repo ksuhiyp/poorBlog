@@ -8,7 +8,7 @@ import {
   UserResponseDTO,
   UserLoginDTO,
   UserRegistrationDTO,
-} from '/home/suhayb/repos/poor-blog/src/models/user.model';
+} from '../model/user.model';
 
 describe('UserService', () => {
   let service: UserService;

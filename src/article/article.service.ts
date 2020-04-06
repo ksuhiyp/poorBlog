@@ -7,7 +7,7 @@ import {
   GetArticlesQuery,
   UpdateArticleDTO,
   CreateArticleDTO,
-} from 'src/models/article.model';
+} from 'src/model/article.model';
 import { User } from 'src/entities/user.entity';
 
 @Injectable()

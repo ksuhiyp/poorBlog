@@ -17,7 +17,7 @@ import {
   UserRegistrationDTO,
   UserUpdateDTO,
   UserResponseDTO,
-} from '../models/user.model';
+} from '../model/user.model';
 import { User } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';

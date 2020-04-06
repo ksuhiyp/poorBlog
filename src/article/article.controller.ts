@@ -17,7 +17,7 @@ import {
   GetArticlesQuery,
   CreateArticleDTO,
   UpdateArticleDTO,
-} from '../models/article.model';
+} from '../model/article.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
 import { User } from '../entities/user.entity';
