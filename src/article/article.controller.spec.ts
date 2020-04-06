@@ -10,9 +10,9 @@ import {
   GetArticlesQuery,
   CreateArticleDTO,
   UpdateArticleDTO,
-} from 'src/model/article.model';
+} from 'src/models/article.model';
 import { User } from 'src/entities/user.entity';
-import { UserUpdateDTO } from 'src/model/user.model';
+import { UserUpdateDTO } from 'src/models/user.model';
 
 describe('Article Controller', () => {
   let controller: ArticleController;

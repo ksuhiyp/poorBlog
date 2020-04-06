@@ -8,7 +8,7 @@ import {
   UserResponseDTO,
   UserLoginDTO,
   UserRegistrationDTO,
-} from '../model/user.model';
+} from '../models/user.model';
 
 describe('UserService', () => {
   let service: UserService;

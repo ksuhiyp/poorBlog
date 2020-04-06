@@ -8,7 +8,7 @@ import {
 import { IsUrl, IsOptional } from 'class-validator';
 import { AbstractEntity } from './abstract.entity';
 import { Exclude, classToPlain } from 'class-transformer';
-import { UserResponseDTO } from 'src/model/user.model';
+import { UserResponseDTO } from 'src/models/user.model';
 import { Article } from './article.entity';
 
 @Entity()

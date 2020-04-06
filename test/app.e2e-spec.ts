@@ -3,9 +3,9 @@ import { INestApplication, HttpStatus, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import { AppModule } from '../src/app.module';
-import { articleResponseDTO } from '../src/model/article.model';
+import { articleResponseDTO } from '../src/models/article.model';
 import { plainToClass } from 'class-transformer';
-import { UserRequestDTO } from 'src/model/user.model';
+import { UserRequestDTO } from 'src/models/user.model';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
   let mockUser: UserRequestDTO = { username: 'suhayb', id: 3, bio: 'star' };
