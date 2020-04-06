@@ -122,7 +122,7 @@ describe('AppController (e2e)', () => {
     describe('Get article', () => {
       it('Should return an article or throw NotFoundException', () => {
         return request(app.getHttpServer())
-          .get('/articles/12')
+          .get('/article/12')
           .expect(({ body, status }) => {
             if (status === HttpStatus.NOT_FOUND) {
               expect(HttpStatus.NOT_FOUND);
@@ -138,7 +138,7 @@ describe('AppController (e2e)', () => {
     describe('Get articles', () => {
       it('Should return an array of articles', () => {
         return request(app.getHttpServer())
-          .get('/articles')
+          .get('/article')
           .expect(({ body }) => {
             expect(200);
             expect(body).toBeInstanceOf(Array);
@@ -146,7 +146,7 @@ describe('AppController (e2e)', () => {
       });
       it('Should return an array of articles order by field', () => {
         return request(app.getHttpServer())
-          .get('/articles')
+          .get('/article')
           .query({ order: { title: 'ASC' } })
           .expect(({ body }) => {
             expect(200);
@@ -155,7 +155,7 @@ describe('AppController (e2e)', () => {
       });
       it('Should return an array of articles limted to 2 with an skip of 1', () => {
         return request(app.getHttpServer())
-          .get('/articles')
+          .get('/article')
           .query({ take: 2, skip: 1 })
           .expect(({ body }) => {
             expect(200);
@@ -166,7 +166,7 @@ describe('AppController (e2e)', () => {
     describe('Post articles', () => {
       it('should return an article', () => {
         return request(app.getHttpServer())
-          .post('/articles')
+          .post('/article')
           .send({
             title: 'test',
             body: 'test',
@@ -182,7 +182,7 @@ describe('AppController (e2e)', () => {
       });
       it('should throw a BarRequestError if request body is invalid', () => {
         return request(app.getHttpServer())
-          .post('/articles')
+          .post('/article')
           .send({
             title: 1,
             describtion: 'test',
@@ -193,7 +193,7 @@ describe('AppController (e2e)', () => {
     describe('Put articles', () => {
       it('should return 200', () => {
         return request(app.getHttpServer())
-          .put('/articles/12')
+          .put('/article/12')
           .send({
             title: 'test',
           })
@@ -201,13 +201,13 @@ describe('AppController (e2e)', () => {
       });
       it("should throw 403 if user dosn't own the article", () => {
         return request(app.getHttpServer())
-          .put('/articles/27')
+          .put('/article/27')
           .send({ title: 'test' })
           .expect(403);
       });
       it('should throw 400 if data is invalid', () => {
         return request(app.getHttpServer())
-          .put('/articles/27')
+          .put('/article/27')
           .send({ title: 1 })
           .expect(400);
       });

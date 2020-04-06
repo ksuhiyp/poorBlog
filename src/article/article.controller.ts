@@ -23,7 +23,7 @@ import { UserParam } from '../common/decorators/user.decorator';
 import { User } from '../entities/user.entity';
 import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.interceptor';
 
-@Controller('articles')
+@Controller('article')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
   @Get(':id')
