@@ -1,19 +1,27 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { INestApplication, HttpStatus } from '@nestjs/common';
+import { INestApplication, HttpStatus, ExecutionContext } from '@nestjs/common';
 import * as request from 'supertest';
 import { AuthGuard } from '@nestjs/passport';
 import { AppModule } from '../src/app.module';
-
-
+import { articleResponseDTO } from '../src/models/article.model';
+import { plainToClass } from 'class-transformer';
+import { UserRequestDTO } from 'src/models/user.model';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-
+  let mockUser: UserRequestDTO = { username: 'suhayb', id: 3, bio: 'star' };
   beforeAll(async done => {
     const moduleFixture: TestingModule = await Test.createTestingModule({
       imports: [AppModule],
     })
       .overrideGuard(AuthGuard('jwt'))
-      .useValue({ canActivate: jest.fn(() => true) })
+      .useValue({
+        canActivate: jest.fn((context: ExecutionContext) => {
+          const req = context.switchToHttp().getRequest();
+          req.user = mockUser;
+          return true;
+        }),
+      })
+
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -92,7 +100,6 @@ describe('AppController (e2e)', () => {
         });
       });
     });
-   
   });
   describe('Auhtentication Controller', () => {
     describe('POST [login]', () => {
@@ -102,13 +109,123 @@ describe('AppController (e2e)', () => {
           .send({ username: 'suhaib', password: 'test' })
           .expect(({ status, body }) => {
             if (status === 401) {
-            expect(401)
+              expect(401);
             } else {
-              expect(200)
-              expect(body).toMatchObject({access_token:''})
-          }
-        })
-       })
+              expect(200);
+              expect(body).toMatchObject({ access_token: '' });
+            }
+          });
+      });
+    });
   });
-});
+  describe('Article Controller', () => {
+    describe('Get article', () => {
+      it('Should return an article or throw NotFoundException', () => {
+        return request(app.getHttpServer())
+          .get('/articles/12')
+          .expect(({ body, status }) => {
+            if (status === HttpStatus.NOT_FOUND) {
+              expect(HttpStatus.NOT_FOUND);
+            } else {
+              expect(200);
+              expect(plainToClass(articleResponseDTO, body)).toBeInstanceOf(
+                articleResponseDTO,
+              );
+            }
+          });
+      });
+    });
+    describe('Get articles', () => {
+      it('Should return an array of articles', () => {
+        return request(app.getHttpServer())
+          .get('/articles')
+          .expect(({ body }) => {
+            expect(200);
+            expect(body).toBeInstanceOf(Array);
+          });
+      });
+      it('Should return an array of articles order by field', () => {
+        return request(app.getHttpServer())
+          .get('/articles')
+          .query({ order: { title: 'ASC' } })
+          .expect(({ body }) => {
+            expect(200);
+            expect(body).toBeInstanceOf(Array);
+          });
+      });
+      it('Should return an array of articles limted to 2 with an skip of 1', () => {
+        return request(app.getHttpServer())
+          .get('/articles')
+          .query({ take: 2, skip: 1 })
+          .expect(({ body }) => {
+            expect(200);
+            expect(body).toHaveLength(2);
+          });
+      });
+    });
+    describe('Post articles', () => {
+      it('should return an article', () => {
+        return request(app.getHttpServer())
+          .post('/articles')
+          .send({
+            title: 'test',
+            body: 'test',
+            describtion: 'test',
+            author: 3,
+          })
+          .expect(({ body }) => {
+            expect(200);
+            expect(plainToClass(articleResponseDTO, body)).toBeInstanceOf(
+              articleResponseDTO,
+            );
+          });
+      });
+      it('should throw a BarRequestError if request body is invalid', () => {
+        return request(app.getHttpServer())
+          .post('/articles')
+          .send({
+            title: 1,
+            describtion: 'test',
+          })
+          .expect(400);
+      });
+    });
+    describe('Put articles', () => {
+      it('should return 200', () => {
+        return request(app.getHttpServer())
+          .put('/articles/12')
+          .send({
+            title: 'test',
+          })
+          .expect(200);
+      });
+      it("should throw 403 if user dosn't own the article", () => {
+        return request(app.getHttpServer())
+          .put('/articles/27')
+          .send({ title: 'test' })
+          .expect(403);
+      });
+      it('should throw 400 if data is invalid', () => {
+        return request(app.getHttpServer())
+          .put('/articles/27')
+          .send({ title: 1 })
+          .expect(400);
+      });
+    });
+    describe('delete article', () => {
+      it('should return 200/403/404', () => {
+        request(app.getHttpServer())
+          .delete('articles/1')
+          .expect(({ body, status }) => {
+            if (status === HttpStatus.OK) {
+              expect(HttpStatus.OK);
+            } else if (status === HttpStatus.FORBIDDEN) {
+              expect(HttpStatus.FORBIDDEN);
+            } else {
+              expect(HttpStatus.NOT_FOUND);
+            }
+          });
+      });
+    });
+  });
 });

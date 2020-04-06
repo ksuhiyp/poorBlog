@@ -1,7 +1,6 @@
 import { IsOptional, IsNumber, IsString, IsNotEmpty } from 'class-validator';
-import { isString } from 'util';
-import { FindOptionsUtils, WhereExpression, OrderByCondition } from 'typeorm';
-import { User } from 'src/entities/user.entity';
+import { WhereExpression, OrderByCondition } from 'typeorm';
+import { UserResponseDTO } from './user.model';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -38,10 +37,11 @@ export class CreateArticleDTO {
 
 export class UpdateArticleDTO {
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
+
   title?: string;
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   body?: string;
   @IsOptional()
   tags?: string[];
@@ -49,6 +49,13 @@ export class UpdateArticleDTO {
   describtion?: string;
 }
 
-export interface articleResponseDTO {
-
+export class articleResponseDTO {
+  id?: Number;
+  createdAt?: Date;
+  updatedAt?: Date;
+  slug?: string;
+  title?: string;
+  body?: string;
+  describtion?: string;
+  author?: UserResponseDTO;
 }

@@ -7,9 +7,9 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import { User } from 'src/entities/user.entity';
+import { User } from '../entities/user.entity';
 import { isString } from 'util';
-import { Article } from 'src/entities/article.entity';
+import { Article } from '../entities/article.entity';
 
 export class UserRegistrationDTO {
   @IsString()
@@ -56,7 +56,7 @@ export class UserUpdateDTO {
   photo?: string;
 }
 
-export interface UserResponseDTO  {
+export interface UserResponseDTO {
   readonly id: number;
   readonly username: string;
   readonly bio?: string;
@@ -64,4 +64,11 @@ export interface UserResponseDTO  {
   readonly articles?: Number[];
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
+}
+
+export interface UserRequestDTO {
+  username: string;
+  id: number;
+  bio?: string;
+  photo?: string;
 }

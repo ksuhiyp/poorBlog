@@ -35,8 +35,8 @@ export class ArticleService {
     data: UpdateArticleDTO,
     user: User,
   ): Promise<UpdateResult> {
-    const article = await this.repo.findOne(id, { relations: ['author'] });
-    if (user.id === article.author.id) {
+    const article = await this.repo.findOneOrFail(id, { relations: ['author'] });
+    if (user.id === article.author?.id) {
       return this.repo.update({ id }, data);
     }
     throw new ForbiddenException();
