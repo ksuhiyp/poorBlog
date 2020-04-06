@@ -7,9 +7,9 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { isString } from 'util';
-import { Article } from '../entities/article.entity';
+import { ArticleEntity } from '../entities/article.entity';
 
 export class UserRegistrationDTO {
   @IsString()

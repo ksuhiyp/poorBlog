@@ -2,12 +2,12 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { AuthenticationService } from './authentication.service';
 import { UserService } from '../user/user.service';
 import { JwtService } from '@nestjs/jwt';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Repository } from 'typeorm';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
-  let repo: Repository<User>;
+  let repo: Repository<UserEntity>;
   let hash: string;
   let user; let access_token = { access_token: 'test' };
 

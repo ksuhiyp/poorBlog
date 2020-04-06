@@ -1,8 +1,8 @@
 import { Repository, InsertResult } from 'typeorm';
-import { User } from 'src/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 
-export class MockUserRepository extends Repository<User> {
-  readonly user: User = {
+export class MockUserRepository extends Repository<UserEntity> {
+  readonly user: UserEntity = {
     id: 1,
     username: 'test',
     toJson: () => undefined,

@@ -1,6 +1,6 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Article } from '../entities/article.entity';
+import { ArticleEntity } from '../entities/article.entity';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
@@ -8,12 +8,12 @@ import {
   UpdateArticleDTO,
   CreateArticleDTO,
 } from 'src/models/article.model';
-import { User } from 'src/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectRepository(Article) private repo: Repository<Article>) {}
-  getArticle(query?: GetArticleByIdOrSlugQuery): Promise<Article> {
+  constructor(@InjectRepository(ArticleEntity) private repo: Repository<ArticleEntity>) {}
+  getArticle(query?: GetArticleByIdOrSlugQuery): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
       where: {
         ...
@@ -22,10 +22,10 @@ export class ArticleService {
       relations: ['author'],
     });
   }
-  getArticles(query?: GetArticlesQuery): Promise<Article[]> {
+  getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
     return this.repo.find({ ...query, relations: ['author'] });
   }
-  createArticle(article: CreateArticleDTO, author: User): Promise<Article> {
+  createArticle(article: CreateArticleDTO, author: UserEntity): Promise<ArticleEntity> {
     const entity = this.repo.create(article);
     entity.author = author;
     return this.repo.save(entity);
@@ -33,7 +33,7 @@ export class ArticleService {
   async updateArticle(
     id: number,
     data: UpdateArticleDTO,
-    user: User,
+    user: UserEntity,
   ): Promise<UpdateResult> {
     const article = await this.repo.findOneOrFail(id, { relations: ['author'] });
     if (user.id === article.author?.id) {
@@ -41,7 +41,7 @@ export class ArticleService {
     }
     throw new ForbiddenException();
   }
-  async deleteArticle(id: number, user: User): Promise<DeleteResult> {
+  async deleteArticle(id: number, user: UserEntity): Promise<DeleteResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
     });

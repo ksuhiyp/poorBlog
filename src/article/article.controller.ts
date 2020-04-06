@@ -10,9 +10,12 @@ import {
   Put,
   UseInterceptors,
   Delete,
+  HttpStatus,
+  Res,
+  Req,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
-import { Article } from '../entities/article.entity';
+import { ArticleEntity } from '../entities/article.entity';
 import {
   GetArticlesQuery,
   CreateArticleDTO,
@@ -20,14 +23,15 @@ import {
 } from '../models/article.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.interceptor';
+import { stat } from 'fs';
 
 @Controller('article')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
   @Get(':id')
-  async article(@Param('id') id: number): Promise<Article> {
+  async article(@Param('id') id: number): Promise<ArticleEntity> {
     const article = await this.articleService.getArticle({ id });
     if (!article) {
       throw new NotFoundException(`No Article with id ${id}`);
@@ -37,13 +41,20 @@ export class ArticleController {
 
   @Get()
   @UseInterceptors(PlainToClassInterceptor)
-  async articles(@Query() query: GetArticlesQuery) {
+  async articles(@Query() query: GetArticlesQuery, @Req() req:any) {
     const articles = await this.articleService.getArticles(query);
+    if (!articles.length) {
+      req.res.statusCode=HttpStatus.NO_CONTENT
+      return 
+    }
     return articles;
-  } 
+  }
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createArticle(@Body() body: CreateArticleDTO, @UserParam() user: User) {
+  async createArticle(
+    @Body() body: CreateArticleDTO,
+    @UserParam() user: UserEntity,
+  ) {
     return await this.articleService.createArticle(body, user);
   }
 
@@ -51,7 +62,7 @@ export class ArticleController {
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
     @Body() body: UpdateArticleDTO,
-    @UserParam() user: User,
+    @UserParam() user: UserEntity,
     @Param('id') id: number,
   ) {
     return this.articleService.updateArticle(id, body, user);
@@ -59,7 +70,7 @@ export class ArticleController {
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  async deleteArticle(@Param('id') id: number, @UserParam() user: User) {
+  async deleteArticle(@Param('id') id: number, @UserParam() user: UserEntity) {
     return await this.articleService.deleteArticle(id, user);
   }
 }

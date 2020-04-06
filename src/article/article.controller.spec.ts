@@ -3,7 +3,7 @@ import { ArticleController } from './article.controller';
 import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { Article } from '../entities/article.entity';
+import { ArticleEntity } from '../entities/article.entity';
 import { Repository, DeleteResult } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import {
@@ -11,7 +11,7 @@ import {
   CreateArticleDTO,
   UpdateArticleDTO,
 } from 'src/models/article.model';
-import { User } from 'src/entities/user.entity';
+import { UserEntity } from 'src/entities/user.entity';
 import { UserUpdateDTO } from 'src/models/user.model';
 
 describe('Article Controller', () => {
@@ -43,7 +43,7 @@ describe('Article Controller', () => {
       controllers: [ArticleController],
       providers: [
         ArticleService,
-        { provide: getRepositoryToken(Article), useClass: Repository },
+        { provide: getRepositoryToken(ArticleEntity), useClass: Repository },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))

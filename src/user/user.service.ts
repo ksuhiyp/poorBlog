@@ -5,26 +5,26 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { Repository, InsertResult, DeleteResult, UpdateResult } from 'typeorm';
 import { UserRegistrationDTO, UserUpdateDTO } from 'src/models/user.model';
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly userRepository: Repository<User>,
+    @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
   ) {}
 
-  findByUsername(username: string): Promise<User> {
+  findByUsername(username: string): Promise<UserEntity> {
     return this.userRepository.findOne({ where: { username } });
   }
-  findById(id: number): Promise<User> {
+  findById(id: number): Promise<UserEntity> {
     return this.userRepository.findOne(id);
   }
-  findOne(id: number): Promise<User> {
+  findOne(id: number): Promise<UserEntity> {
     return this.userRepository.findOneOrFail(id);
   }
 
-  findAll(): Promise<User[]> {
+  findAll(): Promise<UserEntity[]> {
     return this.userRepository.find();
   }
   create(user: UserRegistrationDTO): Promise<InsertResult> {

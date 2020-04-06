@@ -18,7 +18,7 @@ import {
   UserUpdateDTO,
   UserResponseDTO,
 } from '../models/user.model';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';
 
@@ -34,7 +34,7 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get(':username')
-  async findByUserName(@Param('username') username: string): Promise<User> {
+  async findByUserName(@Param('username') username: string): Promise<UserEntity> {
     const user = await this.userService.findByUsername(username);
     if (!user) {
       throw new NotFoundException(`User ${username} not found!`);

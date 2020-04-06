@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
-import { User } from '../entities/user.entity';
+import { UserEntity } from '../entities/user.entity';
 import { AuthGuard } from '@nestjs/passport';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
@@ -23,7 +23,7 @@ describe('User Controller', () => {
       controllers: [UserController],
       providers: [
         UserService,
-        { provide: getRepositoryToken(User), useClass: Repository },
+        { provide: getRepositoryToken(UserEntity), useClass: Repository },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))

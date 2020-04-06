@@ -7,22 +7,22 @@ import {
   BeforeUpdate,
 } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
-import { User } from './user.entity';
+import { UserEntity } from './user.entity';
 import slugify from 'slugify';
 import { IsOptional } from 'class-validator';
 
-@Entity()
-export class Article extends AbstractEntity {
+@Entity('articles')
+export class ArticleEntity extends AbstractEntity {
   @Column()
   slug?: string;
   @Column()
   title: string;
   @Column()
   body: string;
-  @ManyToOne(type => User)
+  @ManyToOne(type => UserEntity)
     
     
-  author: User;
+  author: UserEntity;
   @Column({ nullable: true })
   @IsOptional()
   describtion: string;

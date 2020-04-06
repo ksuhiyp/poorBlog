@@ -2,20 +2,20 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ArticleService } from './article.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { Article } from '../entities/article.entity';
-import { User } from 'src/entities/user.entity';
+import { ArticleEntity } from '../entities/article.entity';
+import { UserEntity } from 'src/entities/user.entity';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
 
 describe('ArticleService', () => {
   let service: ArticleService;
-  let repo: Repository<Article>;
-  let mockAuthor: User = {
+  let repo: Repository<ArticleEntity>;
+  let mockAuthor: UserEntity = {
     id: 1,
     createdAt: new Date(),
     username: 'test',
     password: 'test',
   };
-  let mockArticle: Article = {
+  let mockArticle: ArticleEntity = {
     author: mockAuthor,
     createdAt: new Date(),
     body: 'test',
@@ -26,12 +26,12 @@ describe('ArticleService', () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ArticleService,
-        { provide: getRepositoryToken(Article), useClass: Repository },
+        { provide: getRepositoryToken(ArticleEntity), useClass: Repository },
       ],
     }).compile();
 
     service = module.get<ArticleService>(ArticleService);
-    repo = module.get(getRepositoryToken(Article));
+    repo = module.get(getRepositoryToken(ArticleEntity));
   });
 
   it('should be defined', () => {
@@ -104,7 +104,7 @@ describe('ArticleService', () => {
   describe('updateArticle', () => {
     it('should call repo->findOne', () => {
       const findOne = jest
-        .spyOn(repo, 'findOne')
+        .spyOn(repo, 'findOneOrFail')
         .mockImplementation(() => Promise.resolve(mockArticle));
       const result = service.updateArticle(1, { body: 'test' }, mockAuthor);
       expect(findOne).toBeCalled();

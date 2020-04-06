@@ -9,10 +9,10 @@ import { IsUrl, IsOptional } from 'class-validator';
 import { AbstractEntity } from './abstract.entity';
 import { Exclude, classToPlain } from 'class-transformer';
 import { UserResponseDTO } from 'src/models/user.model';
-import { Article } from './article.entity';
+import { ArticleEntity } from './article.entity';
 
-@Entity()
-export class User extends AbstractEntity {
+@Entity('users')
+export class UserEntity extends AbstractEntity {
   constructor() {
     super();
   }
@@ -32,10 +32,10 @@ export class User extends AbstractEntity {
   bio?: string;
 
   @OneToMany(
-    type => Article,
+    type => ArticleEntity,
     article => article.id,
   )
-  articles?: Article[];
+  articles?: ArticleEntity[];
 
    toJson?(): UserResponseDTO {
     return <UserResponseDTO>classToPlain(this);
