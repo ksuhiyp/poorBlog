@@ -2,7 +2,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
-import { Repository, UpdateResult, InsertResult } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 import { MockUserRepository } from '../../test/mocks/mock-user-repository';
 import {
   UserResponseDTO,
@@ -40,7 +40,6 @@ describe('UserService', () => {
     toJson: () => userRes,
   };
   let userReg: UserRegistrationDTO = { username: 'test', password: 'test' };
-  let userLogin: UserLoginDTO = { username: 'test', password: 'test' };
   let repo: Repository<UserEntity>;
   let mockRepository: Repository<UserEntity> = new MockUserRepository();
   beforeEach(async () => {
