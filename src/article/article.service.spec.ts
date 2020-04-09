@@ -122,7 +122,6 @@ describe('ArticleService', () => {
         .mockImplementation(() =>
           Promise.resolve({ affected: 0, raw: '', generatedMaps: [] }),
         );
-      console.log(mockAuthor.id);
       const result = service.updateArticle(
         1,
         { body: 'test' },

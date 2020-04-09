@@ -241,7 +241,6 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .get('/tag')
         .expect(({ body, status }) => {
-          console.log(body)
 
           expect(HttpStatus.OK);
           expect(body).toBeInstanceOf(Array);

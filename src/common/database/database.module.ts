@@ -23,7 +23,7 @@ import { TagEntity } from '../../entities/tag.entity';
           ? process.env.DB_CONNECTION_NAME
           : process.env.TESTING_DB_CONNECTION_NAME,
       keepConnectionAlive: true,
-      synchronize: process.env.NODE_ENV === 'testing' ? true : true,
+      synchronize: process.env.NODE_ENV === 'testing' ? true : false,
       logging: process.env.NODE_ENV === 'development' ? true : false,
     }),
   ],
