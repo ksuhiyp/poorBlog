@@ -11,8 +11,6 @@ import {
   CreateArticleDTO,
   UpdateArticleDTO,
 } from 'src/models/article.model';
-import { UserEntity } from 'src/entities/user.entity';
-import { UserUpdateDTO } from 'src/models/user.model';
 
 describe('Article Controller', () => {
   let controller: ArticleController;

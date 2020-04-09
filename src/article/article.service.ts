@@ -1,7 +1,13 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
-import { Repository, UpdateResult, DeleteResult } from 'typeorm';
+import {
+  Repository,
+  UpdateResult,
+  DeleteResult,
+  In,
+  InsertResult,
+} from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
   GetArticlesQuery,
@@ -9,15 +15,18 @@ import {
   CreateArticleDTO,
 } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
+import { TagEntity } from 'src/entities/tag.entity';
 
 @Injectable()
 export class ArticleService {
-  constructor(@InjectRepository(ArticleEntity) private repo: Repository<ArticleEntity>) {}
+  constructor(
+    @InjectRepository(ArticleEntity) private repo: Repository<ArticleEntity>,
+    @InjectRepository(TagEntity) private tagRepo: Repository<TagEntity>,
+  ) {}
   getArticle(query?: GetArticleByIdOrSlugQuery): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
       where: {
-        ...
-        query
+        ...query,
       },
       relations: ['author'],
     });
@@ -25,18 +34,27 @@ export class ArticleService {
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
     return this.repo.find({ ...query, relations: ['author'] });
   }
-  createArticle(article: CreateArticleDTO, author: UserEntity): Promise<ArticleEntity> {
-    const entity = this.repo.create(article);
-    entity.author = author;
-    return this.repo.save(entity);
+  async createArticle(
+    data: CreateArticleDTO,
+    author: UserEntity,
+  ): Promise<ArticleEntity> {
+    const articleEntity = this.repo.create(data);
+    articleEntity.author = author;
+    const tagList = articleEntity.tagList;
+    await this.saveTags(tagList);
+    const article = await this.repo.save(articleEntity);
+    return article;
   }
   async updateArticle(
     id: number,
     data: UpdateArticleDTO,
     user: UserEntity,
   ): Promise<UpdateResult> {
-    const article = await this.repo.findOneOrFail(id, { relations: ['author'] });
+    const article = await this.repo.findOneOrFail(id, {
+      relations: ['author'],
+    });
     if (user.id === article.author?.id) {
+      await this.saveTags(article.tagList)
       return this.repo.update({ id }, data);
     }
     throw new ForbiddenException();
@@ -54,5 +72,20 @@ export class ArticleService {
 
   private isArticleAuthor(userId: number, authorId: number): boolean {
     return userId === authorId ? true : false;
+  }
+
+  private async saveTags(tagList: string[]): Promise<InsertResult> {
+    const tagEntities = tagList.map(title => {
+      const tagEntity = new TagEntity();
+      tagEntity.title = title;
+      return tagEntity;
+    });
+    return this.tagRepo
+      .createQueryBuilder()
+      .insert()
+      .into(TagEntity)
+      .values(tagEntities)
+      .orIgnore()
+      .execute();
   }
 }

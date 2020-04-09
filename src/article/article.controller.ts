@@ -41,7 +41,7 @@ export class ArticleController {
 
   @Get()
   @UseInterceptors(PlainToClassInterceptor)
-  async articles(@Query() query: GetArticlesQuery, @Req() req:any) {
+  async articles(@Query() query: GetArticlesQuery, @Req() req?:any) {
     const articles = await this.articleService.getArticles(query);
     if (!articles.length) {
       req.res.statusCode=HttpStatus.NO_CONTENT

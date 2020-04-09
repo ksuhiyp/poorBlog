@@ -6,6 +6,7 @@ import { AppModule } from '../src/app.module';
 import { articleResponseDTO } from '../src/models/article.model';
 import { plainToClass } from 'class-transformer';
 import { UserRequestDTO } from 'src/models/user.model';
+import { retry } from 'rxjs/operators';
 import { stat } from 'fs';
 describe('AppController (e2e)', () => {
   let app: INestApplication;
@@ -22,7 +23,6 @@ describe('AppController (e2e)', () => {
           return true;
         }),
       })
-
       .compile();
 
     app = moduleFixture.createNestApplication();
@@ -235,6 +235,18 @@ describe('AppController (e2e)', () => {
             }
           });
       });
+    });
+  });
+  describe('Tag Controller', () => {
+    it('should return 200 with an array of tags', () => {
+      return request(app.getHttpServer())
+        .get('/tag')
+        .expect(({ body, status }) => {
+          console.log(body)
+
+          expect(HttpStatus.OK);
+          expect(body).toBeInstanceOf(Array);
+        });
     });
   });
 });

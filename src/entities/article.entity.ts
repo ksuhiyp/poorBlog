@@ -1,11 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToMany,
-  ManyToOne,
-  BeforeInsert,
-  BeforeUpdate,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, BeforeInsert } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
@@ -20,13 +13,12 @@ export class ArticleEntity extends AbstractEntity {
   @Column()
   body: string;
   @ManyToOne(type => UserEntity)
-    
-    
   author: UserEntity;
   @Column({ nullable: true })
   @IsOptional()
   describtion: string;
-  // @Column() tag
+  @Column('simple-array')
+  tagList: string[];
   // @Column() comments
   // @Column() description
   // @Column()

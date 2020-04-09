@@ -11,6 +11,10 @@ export class TagService {
   ) {}
 
   findAll(query?: findAllQuery): Promise<TagEntity[]> {
-    return this.tagRepo.find({ tag: Like(`%${query.tag}%`) });
+    let condition;
+    if (query) {
+      condition = { title: Like(`%${query?.title}%`) };
+    }
+    return this.tagRepo.find(condition);
   }
 }

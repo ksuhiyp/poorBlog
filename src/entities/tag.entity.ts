@@ -5,5 +5,5 @@ import { AbstractEntity } from './abstract.entity';
 export class TagEntity extends AbstractEntity {
   @Column('')
   @Index({ unique: true })
-  tag: string;
+  title: string;
 }

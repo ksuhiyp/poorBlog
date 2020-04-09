@@ -10,6 +10,11 @@ export class GetArticleByIdOrSlugQuery {
   @IsString()
   slug?: string;
 }
+export class GetArticlesByTagName {
+  @IsOptional()
+  @IsString()
+  tag?: string;
+}
 
 export enum order {
   'ASC',
@@ -30,7 +35,7 @@ export class CreateArticleDTO {
   @IsNotEmpty()
   body: string;
   @IsOptional()
-  tags?: string[];
+  tagList?: string[];
   @IsOptional()
   describtion: string;
 }
@@ -38,13 +43,12 @@ export class CreateArticleDTO {
 export class UpdateArticleDTO {
   @IsString()
   @IsOptional()
-
   title?: string;
   @IsString()
   @IsOptional()
   body?: string;
   @IsOptional()
-  tags?: string[];
+  tagList?: string[];
   @IsOptional()
   describtion?: string;
 }
@@ -58,4 +62,5 @@ export class articleResponseDTO {
   body?: string;
   describtion?: string;
   author?: UserResponseDTO;
+  tagList?: string[];
 }
