@@ -60,7 +60,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     Logger.error(
       `${this.name}: ${this.message}`,
       this.stack,
-      `${this.status}|${this.method}|${this.path}|${this.code}`,
+      `[${this.method}]:${this.path} | ${this.code ||
+        this.status}`,
       true,
     );
   }
