@@ -4,13 +4,14 @@ import { AuthGuard } from '@nestjs/passport';
 import { ArticleService } from './article.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
-import { Repository, DeleteResult } from 'typeorm';
+import { Repository, DeleteResult, getRepository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
 import {
   GetArticlesQuery,
   CreateArticleDTO,
   UpdateArticleDTO,
 } from 'src/models/article.model';
+import { TagEntity } from '../entities/tag.entity';
 
 describe('Article Controller', () => {
   let controller: ArticleController;
@@ -42,6 +43,7 @@ describe('Article Controller', () => {
       providers: [
         ArticleService,
         { provide: getRepositoryToken(ArticleEntity), useClass: Repository },
+        { provide: getRepositoryToken(TagEntity), useClass: Repository },
       ],
     })
       .overrideGuard(AuthGuard('jwt'))

@@ -5,28 +5,31 @@ import { Repository } from 'typeorm';
 import { ArticleEntity } from '../entities/article.entity';
 import { UserEntity } from 'src/entities/user.entity';
 import { ForbiddenException, NotFoundException } from '@nestjs/common';
+import { TagEntity } from '../entities/tag.entity';
 
 describe('ArticleService', () => {
   let service: ArticleService;
   let repo: Repository<ArticleEntity>;
   let mockAuthor: UserEntity = {
     id: 1,
-    createdAt: new Date(),
+    createdAt: new Date(process.env.MOCK_DATE),
     username: 'test',
     password: 'test',
   };
   let mockArticle: ArticleEntity = {
     author: mockAuthor,
-    createdAt: new Date(),
+    createdAt: new Date(process.env.MOCK_DATE),
     body: 'test',
     describtion: 'test',
     title: 'test',
+    tagList: [],
   };
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ArticleService,
         { provide: getRepositoryToken(ArticleEntity), useClass: Repository },
+        { provide: getRepositoryToken(TagEntity), useClass: Repository },
       ],
     }).compile();
 
@@ -123,7 +126,7 @@ describe('ArticleService', () => {
       const result = service.updateArticle(
         1,
         { body: 'test' },
-        { id: 2, username: 'suhaib', password: 'test', createdAt: new Date() },
+        { id: 2, username: 'suhaib', password: 'test', createdAt: new Date(process.env.MOCK_DATE) },
       );
       return expect(result).rejects.toThrowError(ForbiddenException);
     });
@@ -160,7 +163,7 @@ describe('ArticleService', () => {
 
       const result = service.deleteArticle(1, {
         id: 2,
-        createdAt: new Date(),
+        createdAt: new Date(process.env.MOCK_DATE),
         password: 'test',
         username: 'test',
       });

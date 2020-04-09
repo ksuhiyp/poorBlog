@@ -4,11 +4,8 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, UpdateResult } from 'typeorm';
 import { MockUserRepository } from '../../test/mocks/mock-user-repository';
-import {
-  UserResponseDTO,
-  UserLoginDTO,
-  UserRegistrationDTO,
-} from '../models/user.model';
+import { UserResponseDTO, UserRegistrationDTO } from '../models/user.model';
+import { ConfigModule } from '@nestjs/config';
 
 describe('UserService', () => {
   let service: UserService;
@@ -22,8 +19,8 @@ describe('UserService', () => {
   let userRes: UserResponseDTO = {
     id: 1,
     username: 'test',
-    updatedAt: new Date(),
-    createdAt: new Date(),
+    updatedAt: new Date('2020-04-09T11:18:10.694Z'),
+    createdAt: new Date('2020-04-09T11:18:10.694Z'),
     photo: null,
     bio: null,
     articles: [],
@@ -31,8 +28,8 @@ describe('UserService', () => {
   let userEntity: UserEntity = {
     id: 1,
     username: 'test',
-    updatedAt: new Date(),
-    createdAt: new Date(),
+    updatedAt: new Date(process.env.MOCK_DATE),
+    createdAt: new Date(process.env.MOCK_DATE),
     photo: null,
     bio: null,
     articles: [],
@@ -44,6 +41,7 @@ describe('UserService', () => {
   let mockRepository: Repository<UserEntity> = new MockUserRepository();
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
+      imports: [ConfigModule.forRoot({ isGlobal: true })],
       providers: [
         UserService,
         { provide: getRepositoryToken(UserEntity), useValue: mockRepository },

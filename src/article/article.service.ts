@@ -1,13 +1,7 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
-import {
-  Repository,
-  UpdateResult,
-  DeleteResult,
-  In,
-  InsertResult,
-} from 'typeorm';
+import { Repository, UpdateResult, DeleteResult, InsertResult } from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
   GetArticlesQuery,
@@ -15,7 +9,7 @@ import {
   CreateArticleDTO,
 } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
-import { TagEntity } from 'src/entities/tag.entity';
+import { TagEntity } from '../entities/tag.entity';
 
 @Injectable()
 export class ArticleService {

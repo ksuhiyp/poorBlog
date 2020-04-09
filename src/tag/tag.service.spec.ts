@@ -8,9 +8,9 @@ describe('TagService', () => {
   let service: TagService;
   let mockTag: TagEntity = new TagEntity();
   beforeAll(async () => {
-    mockTag.tag = 'test';
+    mockTag.title = 'test';
     mockTag.id = 1;
-    mockTag.createdAt = new Date();
+    mockTag.createdAt = new Date(process.env.MOCK_DATE);
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         TagService,

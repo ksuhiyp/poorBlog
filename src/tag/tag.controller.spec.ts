@@ -11,9 +11,9 @@ describe('Tag Controller', () => {
   let mockTag: TagEntity = new TagEntity();
 
   beforeEach(async () => {
-    mockTag.tag = 'test';
+    mockTag.title = 'test';
     mockTag.id = 1;
-    mockTag.createdAt = new Date();
+    mockTag.createdAt = new Date(process.env.MOCK_DATE);
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TagController],
