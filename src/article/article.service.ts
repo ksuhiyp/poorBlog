@@ -41,7 +41,7 @@ export class ArticleService {
     const articleEntity = this.repo.create(data);
     articleEntity.author = author;
     const tagList = articleEntity.tagList;
-    await this.saveTags(tagList);
+    if (tagList.length) await this.saveTags(tagList);
     const article = await this.repo.save(articleEntity);
     return article;
   }
@@ -54,7 +54,7 @@ export class ArticleService {
       relations: ['author'],
     });
     if (user.id === article.author?.id) {
-      await this.saveTags(article.tagList)
+      if (data.tagList?.length) await this.saveTags(data.tagList);
       return this.repo.update({ id }, data);
     }
     throw new ForbiddenException();
