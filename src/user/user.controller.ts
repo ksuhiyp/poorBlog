@@ -33,11 +33,11 @@ export class UserController {
   }
 
   @UseGuards(AuthGuard('jwt'))
-  @Get(':username')
-  async findByUserName(@Param('username') username: string): Promise<UserEntity> {
-    const user = await this.userService.findByUsername(username);
+  @Get(':id')
+  async findByUserName(@Param('id') id: number): Promise<UserEntity> {
+    const user = await this.userService.findById(id);
     if (!user) {
-      throw new NotFoundException(`User ${username} not found!`);
+      throw new NotFoundException(`User id ${id} not found!`);
     }
     return user;
   }

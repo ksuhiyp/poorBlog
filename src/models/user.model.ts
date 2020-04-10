@@ -7,9 +7,6 @@ import {
   IsOptional,
   IsUrl,
 } from 'class-validator';
-import { UserEntity } from '../entities/user.entity';
-import { isString } from 'util';
-import { ArticleEntity } from '../entities/article.entity';
 
 export class UserRegistrationDTO {
   @IsString()
@@ -71,4 +68,9 @@ export interface UserRequestDTO {
   id: number;
   bio?: string;
   photo?: string;
+}
+
+export interface FindUserQuery{
+  username?: string;
+  id?: number;
 }

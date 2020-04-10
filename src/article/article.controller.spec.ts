@@ -64,20 +64,20 @@ describe('Article Controller', () => {
   describe('GET article/:id', () => {
     it('should be called with id param', () => {
       jest.spyOn(controller, 'article');
-      const result = controller.article(1);
-      return expect(controller.article).toBeCalledWith(1);
+      const result = controller.article('test');
+      return expect(controller.article).toBeCalledWith('test');
     });
     it('should call getArticle one times with id argument', () => {
       jest.spyOn(controller, 'article');
       jest.spyOn(service, 'getArticle').mockImplementation(() => mockAricle);
-      controller.article(1);
+      controller.article('test');
       expect(service.getArticle).toBeCalledTimes(1);
-      return expect(service.getArticle).toBeCalledWith({ id: 1 });
+      return expect(service.getArticle).toBeCalledWith({ slug: 'test' });
     });
     it('service should return article if data found', () => {
       jest.spyOn(controller, 'article');
       jest.spyOn(service, 'getArticle').mockImplementation(() => mockAricle);
-      const result = controller.article(1);
+      const result = controller.article('test');
       return expect(result).resolves.toEqual(mockAricle);
     });
     it('service should return NotFoundException if data not found', () => {
@@ -85,7 +85,7 @@ describe('Article Controller', () => {
       jest.spyOn(service, 'getArticle').mockRejectedValue(() => {
         throw new NotFoundException();
       });
-      const result = controller.article(1);
+      const result = controller.article('test');
       return expect(result).rejects.toThrowError(NotFoundException);
     });
   });

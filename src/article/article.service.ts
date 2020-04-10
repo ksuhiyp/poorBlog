@@ -35,7 +35,7 @@ export class ArticleService {
     const articleEntity = this.repo.create(data);
     articleEntity.author = author;
     const tagList = articleEntity.tagList;
-    if (tagList.length) await this.saveTags(tagList);
+    if (tagList?.length) await this.saveTags(tagList);
     const article = await this.repo.save(articleEntity);
     return article;
   }

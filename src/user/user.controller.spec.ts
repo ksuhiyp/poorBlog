@@ -50,27 +50,6 @@ describe('User Controller', () => {
       return expect(controller.getAll()).resolves.toEqual(result);
     });
   });
-  describe('findByUserName', () => {
-    it('should return an user', () => {
-      jest
-        .spyOn(service, 'findByUsername')
-        .mockImplementation(username => Promise.resolve(user));
-      return expect(controller.findByUserName('test')).resolves.toBe(user);
-    });
-    it('should throw if no matching user found', () => {
-      jest
-        .spyOn(service, 'findByUsername')
-        .mockImplementation(username => Promise.resolve(undefined));
-      jest
-        .spyOn(controller, 'findByUserName')
-        .mockRejectedValue(
-          new Error(`Username ${user.username} already exists`),
-        );
-      return expect(controller.findByUserName('test')).rejects.toThrow(
-        new Error(`Username ${user.username} already exists`),
-      );
-    });
-  });
 
   describe('create', () => {
     it('should return undefined if user was created', () => {

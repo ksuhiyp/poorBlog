@@ -11,7 +11,6 @@ import {
   UseInterceptors,
   Delete,
   HttpStatus,
-  Res,
   Req,
 } from '@nestjs/common';
 import { ArticleService } from './article.service';
@@ -25,27 +24,26 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
 import { UserEntity } from '../entities/user.entity';
 import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.interceptor';
-import { stat } from 'fs';
 
 @Controller('article')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
-  @Get(':id')
-  async article(@Param('id') id: number): Promise<ArticleEntity> {
-    const article = await this.articleService.getArticle({ id });
+  @Get(':slug')
+  async article(@Param('slug') slug: string): Promise<ArticleEntity> {
+    const article = await this.articleService.getArticle({ slug });
     if (!article) {
-      throw new NotFoundException(`No Article with id ${id}`);
+      throw new NotFoundException(`No Article with id ${slug}`);
     }
     return article;
   }
 
   @Get()
   @UseInterceptors(PlainToClassInterceptor)
-  async articles(@Query() query: GetArticlesQuery, @Req() req?:any) {
+  async articles(@Query() query: GetArticlesQuery, @Req() req?: any) {
     const articles = await this.articleService.getArticles(query);
     if (!articles.length) {
-      req.res.statusCode=HttpStatus.NO_CONTENT
-      return 
+      req.res.statusCode = HttpStatus.NO_CONTENT;
+      return;
     }
     return articles;
   }

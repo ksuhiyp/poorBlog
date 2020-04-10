@@ -43,15 +43,15 @@ describe('AppController (e2e)', () => {
       });
     });
 
-    describe('/user/:username (GET)', () => {
+    describe('/user/:id (GET)', () => {
       it('Should return user or 404', () => {
         return request(app.getHttpServer())
-          .get('/user/suhayb')
+          .get('/user/2')
           .expect(({ body, status }) => {
             if (status === HttpStatus.NOT_FOUND) {
-              expect(HttpStatus.NOT_FOUND);
+              return expect(HttpStatus.NOT_FOUND);
             } else {
-              expect(HttpStatus.OK);
+              return expect(HttpStatus.OK);
             }
           });
       });
@@ -241,7 +241,6 @@ describe('AppController (e2e)', () => {
       return request(app.getHttpServer())
         .get('/tag')
         .expect(({ body, status }) => {
-
           expect(HttpStatus.OK);
           expect(body).toBeInstanceOf(Array);
         });
