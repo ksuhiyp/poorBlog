@@ -6,10 +6,10 @@ import { INestApplication } from '@nestjs/common';
 describe('Authentication Controller', () => {
   let controller: AuthenticationController;
   let service: AuthenticationService;
-  let req = { user: () => null };
-  let res = { set: () => { }, send: () => { } };
-  let access_token = { access_token: 'test' };
   let user = { username: 'suhaib', password: 'getmein' };
+  let req = { res: { cookie: (cookieName, payload, options) => null, user } };
+
+  let access_token = { access_token: 'test' };
   let app: INestApplication;
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -22,15 +22,16 @@ describe('Authentication Controller', () => {
       .useValue({ login: () => access_token })
       .compile();
 
-
-    controller = moduleRef.get<AuthenticationController>(AuthenticationController);
+    controller = moduleRef.get<AuthenticationController>(
+      AuthenticationController,
+    );
 
     service = moduleRef.get<AuthenticationService>(AuthenticationService);
   });
 
   afterAll(async () => {
     app.close();
-  })
+  });
 
   it('controller should be defined', () => {
     expect(controller).toBeDefined();
@@ -52,16 +53,25 @@ describe('Authentication Controller', () => {
   //   controller.login(req, res);
   // })
 
-  describe('login',  () => {
+  describe('login', () => {
     it('should return access token', async () => {
-      jest.spyOn(service, 'login').mockImplementation(() => access_token);
-      jest.spyOn(req, 'user').mockImplementation(() => user);
-      jest.spyOn(res, 'set').mockReturnValue(null)
-      jest.spyOn(res, 'set').mockReturnValue(null)
-      jest.spyOn(res, 'send').mockReturnValue(null)
-      expect(await controller.login(req)).toBe(access_token);
-
-    })
-  })
-
+      const login = jest
+        .spyOn(service, 'login')
+        .mockImplementation(() => access_token);
+      const cookie = jest.spyOn(req.res, 'cookie');
+      const result = await controller.login(req);
+      expect(cookie).toBeCalledWith(
+        'jwt',
+        service.login({ id: 1, username: 'suhaib' }),
+        {
+          maxAge: +process.env.COOKIE_MAX_AGE,
+          sameSite: 'strict',
+          secure: false,
+          httpOnly: true,
+        },
+      );
+      expect(login).toBeCalledWith({ id: 1, username: 'suhaib' });
+      expect(result).toBe(undefined);
+    });
+  });
 });

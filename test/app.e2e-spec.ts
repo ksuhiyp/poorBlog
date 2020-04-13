@@ -101,18 +101,18 @@ describe('AppController (e2e)', () => {
       });
     });
   });
-  describe('Auhtentication Controller', () => {
+  describe('Authtentication Controller', () => {
     describe('POST [login]', () => {
       it('Should return access token or 401', () => {
         return request(app.getHttpServer())
           .post('/auth/login')
-          .send({ username: 'suhaib', password: 'test' })
+          .send({ username: 'suhaib', password: 'getmein' })
           .expect(({ status, body }) => {
             if (status === 401) {
               expect(401);
             } else {
-              expect(200);
-              expect(body).toMatchObject({ access_token: '' });
+              expect(201);
+              expect(body).toEqual({});
             }
           });
       });
