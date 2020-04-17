@@ -13,7 +13,7 @@ import { ArticleEntity } from './article.entity';
 
 @Entity('users')
 export class UserEntity extends AbstractEntity {
-  constructor() {
+  constructor(user: Partial<UserEntity>) {
     super();
   }
   @Column()
@@ -37,9 +37,7 @@ export class UserEntity extends AbstractEntity {
   )
   articles?: ArticleEntity[];
 
-   toJson?(): UserResponseDTO {
+  toJson?(): UserResponseDTO {
     return <UserResponseDTO>classToPlain(this);
   }
-
- 
 }

@@ -1,17 +1,29 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AuthenticationService } from './authentication.service';
 import { UserService } from '../user/user.service';
-import { JwtService } from '@nestjs/jwt';
+import { JwtService, JwtModule, JwtModuleOptions } from '@nestjs/jwt';
 import { UserEntity } from '../entities/user.entity';
 import { Repository } from 'typeorm';
+import { LocalStrategy } from './local.strategy';
+import { JwtStrategy } from './jwt.strategy';
+import { ExtractJwt, Strategy } from 'passport-jwt';
 
 describe('AuthenticationService', () => {
   let service: AuthenticationService;
+  let jwtService: JwtService;
   let repo: Repository<UserEntity>;
   let hash: string;
-  let user; let access_token = { access_token: 'test' };
-
-  let bcrypt = { compareSync: (pass: string, hash: string) => true }
+  let user;
+  let access_token = 'test';
+  const cookieExtractor = req => {
+    return 'test';
+  };
+  let JwtModuleOptions = {
+    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    ignoreExpiration: false,
+    secretOrKey: 'test',
+  };
+  let bcrypt = { compareSync: (pass: string, hash: string) => true };
   beforeEach(async () => {
     user = [{ username: 'test', password: 'test' }];
     hash = 'test';
@@ -21,12 +33,16 @@ describe('AuthenticationService', () => {
       .overrideProvider(UserService)
       .useValue({ findByUsername: () => user })
       .overrideProvider(JwtService)
-      .useValue({ sign: (payload) => hash })
+      .useValue({ sign: payload => hash })
       .overrideProvider(AuthenticationService)
-      .useValue({ validateUser: (username, password) => user, login: (user) => access_token })
+      .useValue({
+        validateUser: (username, password) => user,
+        login: user => access_token,
+      })
       .compile();
 
     service = module.get<AuthenticationService>(AuthenticationService);
+    jwtService = module.get<JwtService>(JwtService);
   });
 
   it('should be defined', () => {
@@ -40,15 +56,19 @@ describe('AuthenticationService', () => {
     it('should return null when password is incorrect', () => {
       jest.spyOn(service, 'validateUser').mockReturnValue(null);
       expect(service.validateUser(user.username, user.password)).toBe(null);
-    })
+    });
   });
   describe('login', () => {
     it('should return an access token', () => {
+      const payload = { username: 'suhayb', id: 1 };
+      const sign = jest.spyOn(jwtService, 'sign');
       expect(service).toBeDefined();
-
-      jest.spyOn(service, 'login').mockReturnValue(access_token)
-      expect(service.login(user)).toBe(access_token)
-    })
-  })
-
+      expect(jwtService).toHaveProperty('sign');
+      expect(jwtService.sign(payload)).toBe('test');
+      const result = service.login(user);
+      expect(sign).toBeCalledWith(payload);
+      expect(jwtService.sign(payload)).toEqual('test');
+      expect(result).toBe(access_token);
+    });
+  });
 });

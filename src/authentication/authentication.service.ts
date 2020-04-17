@@ -2,7 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { UserLoginDTO, UserResponseDTO } from 'src/models/user.model';
+import {
+  UserLoginDTO,
+  UserResponseDTO,
+  Credentials,
+} from 'src/models/user.model';
+import { UserEntity } from 'src/entities/user.entity';
 @Injectable()
 export class AuthenticationService {
   constructor(
@@ -24,10 +29,9 @@ export class AuthenticationService {
     return bcrypt.compareSync(password, hash);
   }
 
-  login(user: UserResponseDTO) {
+  login(user: Partial<UserEntity>) {
     const payload = { username: user.username, id: user.id };
-    return {
-      access_token: this.jwtService.sign(payload),
-    };
+    const token = this.jwtService.sign(payload);
+    return token;
   }
 }

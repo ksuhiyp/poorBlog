@@ -9,14 +9,13 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './common/database/database.module';
 import { ArticleModule } from './article/article.module';
 import { TagModule } from './tag/tag.module';
-
 @Module({
   imports: [
-    UserModule,
-    AuthenticationModule,
     ConfigModule.forRoot({ isGlobal: true }),
+    UserModule,
     DatabaseModule,
     ArticleModule,
+    AuthenticationModule,
     TagModule,
   ],
   controllers: [AppController],

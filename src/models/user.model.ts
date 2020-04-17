@@ -70,7 +70,12 @@ export interface UserRequestDTO {
   photo?: string;
 }
 
-export interface FindUserQuery{
+export interface FindUserQuery {
   username?: string;
   id?: number;
+}
+
+export interface Credentials {
+  username: string;
+  password: string;
 }

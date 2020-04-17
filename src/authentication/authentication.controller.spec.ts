@@ -2,14 +2,20 @@ import { Test } from '@nestjs/testing';
 import { AuthenticationController } from './authentication.controller';
 import { AuthenticationService } from './authentication.service';
 import { AuthGuard } from '@nestjs/passport';
-import { INestApplication } from '@nestjs/common';
+import { INestApplication, HttpStatus } from '@nestjs/common';
+import { UserEntity } from '../entities/user.entity';
 describe('Authentication Controller', () => {
   let controller: AuthenticationController;
   let service: AuthenticationService;
-  let user = { username: 'suhaib', password: 'getmein' };
+  let user = new UserEntity({
+    id: 1,
+    bio: 'test',
+    username: 'suhayb',
+    password: 'test',
+  });
   let req = { res: { cookie: (cookieName, payload, options) => null, user } };
 
-  let access_token = { access_token: 'test' };
+  let access_token = 'test';
   let app: INestApplication;
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
@@ -68,10 +74,18 @@ describe('Authentication Controller', () => {
           sameSite: 'strict',
           secure: false,
           httpOnly: true,
+          signed: true,
         },
       );
       expect(login).toBeCalledWith({ id: 1, username: 'suhaib' });
       expect(result).toBe(undefined);
+    });
+  });
+
+  describe('Get session', () => {
+    it('should return 401 or 204', () => {
+      const result = controller.getSession(req, { ...user, id: 1 });
+      expect(result).resolves.toEqual(undefined);
     });
   });
 });

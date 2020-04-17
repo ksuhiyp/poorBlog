@@ -17,7 +17,7 @@ import { TagEntity } from '../../entities/tag.entity';
         process.env.NODE_ENV === 'production'
           ? process.env.PROD_DATABASE
           : process.env.TESTING_DATABASE,
-      entities: [UserEntity, ArticleEntity,TagEntity],
+      entities: [UserEntity, ArticleEntity, TagEntity],
       name:
         process.env.NODE_ENV === 'production'
           ? process.env.DB_CONNECTION_NAME

@@ -3,18 +3,18 @@ import {
   Post,
   UseGuards,
   Request,
-  Body,
-  UsePipes,
-  ValidationPipe,
-  Header,
-  Res,
+  Req,
+  HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthenticationService } from './authentication.service';
-
+import { UserParam } from '../common/decorators/user.decorator';
+import { UserEntity } from '../entities/user.entity';
 @Controller('auth')
 export class AuthenticationController {
   constructor(private readonly authenticationService: AuthenticationService) {}
+
   @UseGuards(AuthGuard('local'))
   @Post('/login')
   async login(@Request() req: any) {
@@ -23,7 +23,15 @@ export class AuthenticationController {
       sameSite: 'strict',
       secure: false,
       httpOnly: true,
+      signed: true,
     });
+    req.res.statusCode = HttpStatus.NO_CONTENT;
     return;
+  }
+
+  @Get('/session')
+  @UseGuards(AuthGuard('jwt'))
+  async getSession(@Req() req: any, @UserParam() user: UserEntity) {
+    return (req.res.statusCode = HttpStatus.NO_CONTENT);
   }
 }
