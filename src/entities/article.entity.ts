@@ -2,7 +2,7 @@ import { Entity, Column, ManyToOne, BeforeInsert } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsUrl } from 'class-validator';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
@@ -10,10 +10,14 @@ export class ArticleEntity extends AbstractEntity {
   slug?: string;
   @Column()
   title: string;
+  @Column({ default: null, nullable: true })
+  @IsUrl()
+  @IsOptional()
+  photo?: string;
   @Column()
   body: string;
   @ManyToOne(type => UserEntity)
-  author: UserEntity;
+  author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>;
   @Column({ nullable: true })
   @IsOptional()
   describtion: string;
@@ -28,5 +32,10 @@ export class ArticleEntity extends AbstractEntity {
       slugify(this.title, { lower: true }) +
       '-' +
       ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
+  }
+  toJson?() {
+    const article = this;
+    article.author = article.author.toJson();
+    return article;
   }
 }

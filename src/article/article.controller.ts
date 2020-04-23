@@ -34,7 +34,7 @@ export class ArticleController {
     if (!article) {
       throw new NotFoundException(`No Article with id ${slug}`);
     }
-    return article;
+    return article.toJson();
   }
 
   @Get()

@@ -131,7 +131,7 @@ describe('AppController (e2e)', () => {
                 expect(401);
               } else {
                 expect(204);
-                expect(header['set-cookie']).toEqual(cookie);
+                expect(header['set-cookie']).toBeDefined();
               }
             });
         });

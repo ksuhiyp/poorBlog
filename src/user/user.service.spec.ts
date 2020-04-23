@@ -9,7 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 
 describe('UserService', () => {
   let service: UserService;
-  let user: UserResponseDTO = {
+  let user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'> = {
     username: 'test',
     id: 1,
     articles: [],
@@ -34,7 +34,7 @@ describe('UserService', () => {
     bio: null,
     articles: [],
     password: 'test',
-    toJson: () => userRes,
+    toJson: () => user,
   };
   let userReg: UserRegistrationDTO = { username: 'test', password: 'test' };
   let repo: Repository<UserEntity>;

@@ -30,7 +30,7 @@ export class ArticleService {
   }
   async createArticle(
     data: CreateArticleDTO,
-    author: UserEntity,
+    author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
   ): Promise<ArticleEntity> {
     const articleEntity = this.repo.create(data);
     articleEntity.author = author;
@@ -42,7 +42,7 @@ export class ArticleService {
   async updateArticle(
     id: number,
     data: UpdateArticleDTO,
-    user: UserEntity,
+    user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
   ): Promise<UpdateResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
@@ -53,7 +53,10 @@ export class ArticleService {
     }
     throw new ForbiddenException();
   }
-  async deleteArticle(id: number, user: UserEntity): Promise<DeleteResult> {
+  async deleteArticle(
+    id: number,
+    user: Omit<UserEntity, 'password' | 'createdAt'>,
+  ): Promise<DeleteResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
     });

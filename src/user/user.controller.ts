@@ -21,6 +21,7 @@ import {
 import { UserEntity } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';
+import { Observable } from 'rxjs';
 
 @Controller('user')
 export class UserController {
@@ -28,8 +29,9 @@ export class UserController {
 
   @UseGuards(AuthGuard('jwt'))
   @Get('/all')
-  async getAll(): Promise<UserResponseDTO[]> {
-    return await (await this.userService.findAll()).map(user => user.toJson());
+  async getAll(): Promise<Omit<UserEntity, 'password' | 'createdAt'>[]> {
+    const users = await this.userService.findAll();
+    return users.map(user => user.toJson());
   }
 
   @UseGuards(AuthGuard('jwt'))

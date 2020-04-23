@@ -37,7 +37,7 @@ export class UserEntity extends AbstractEntity {
   )
   articles?: ArticleEntity[];
 
-  toJson?(): UserResponseDTO {
-    return <UserResponseDTO>classToPlain(this);
+  toJson?(): Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'> {
+    return <UserEntity>classToPlain(this);
   }
 }

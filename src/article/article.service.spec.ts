@@ -10,11 +10,13 @@ import { TagEntity } from '../entities/tag.entity';
 describe('ArticleService', () => {
   let service: ArticleService;
   let repo: Repository<ArticleEntity>;
-  let mockAuthor: UserEntity = {
+  let mockAuthor: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAT'> = {
     id: 1,
-    createdAt: new Date(process.env.MOCK_DATE),
     username: 'test',
-    password: 'test',
+    bio: null,
+    articles: [],
+    photo: null,
+    toJson: (() => this).bind(this),
   };
   let mockArticle: ArticleEntity = {
     author: mockAuthor,
@@ -23,6 +25,7 @@ describe('ArticleService', () => {
     describtion: 'test',
     title: 'test',
     tagList: [],
+    toJson: (() => this).bind(this),
   };
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -125,7 +128,10 @@ describe('ArticleService', () => {
       const result = service.updateArticle(
         1,
         { body: 'test' },
-        { id: 2, username: 'suhaib', password: 'test', createdAt: new Date(process.env.MOCK_DATE) },
+        {
+          id: 2,
+          username: 'suhaib',
+        },
       );
       return expect(result).rejects.toThrowError(ForbiddenException);
     });
@@ -139,7 +145,11 @@ describe('ArticleService', () => {
           Promise.resolve({ affected: 0, raw: '', generatedMaps: [] }),
         );
       const result = service.updateArticle(1, { body: 'test' }, mockAuthor);
-      expect(result).resolves.toEqual(mockArticle);
+      expect(result).resolves.toEqual({
+        affected: 0,
+        generatedMaps: [],
+        raw: "",
+      });
     });
   });
   describe('delete article', () => {
@@ -162,8 +172,6 @@ describe('ArticleService', () => {
 
       const result = service.deleteArticle(1, {
         id: 2,
-        createdAt: new Date(process.env.MOCK_DATE),
-        password: 'test',
         username: 'test',
       });
       return expect(result).rejects.toThrowError(ForbiddenException);

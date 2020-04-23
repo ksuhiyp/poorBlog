@@ -21,6 +21,7 @@ describe('Article Controller', () => {
     title: 'test',
     description: 'test',
     body: 'test',
+    toJson: (() => this).bind(this),
   };
   let getArticlesQuery: GetArticlesQuery = {
     order: undefined,
@@ -78,7 +79,7 @@ describe('Article Controller', () => {
       jest.spyOn(controller, 'article');
       jest.spyOn(service, 'getArticle').mockImplementation(() => mockAricle);
       const result = controller.article('test');
-      return expect(result).resolves.toEqual(mockAricle);
+      return expect(result).resolves.toEqual(mockAricle.toJson());
     });
     it('service should return NotFoundException if data not found', () => {
       jest.spyOn(controller, 'article');
