@@ -1,8 +1,16 @@
-import { Entity, Column, ManyToOne, BeforeInsert } from 'typeorm';
+import {
+  Entity,
+  Column,
+  ManyToOne,
+  BeforeInsert,
+  OneToMany,
+  OneToOne,
+} from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
-import { IsOptional, IsUrl } from 'class-validator';
+import { IsOptional } from 'class-validator';
+import { PhotoEntity } from './photo.entity';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
@@ -10,10 +18,6 @@ export class ArticleEntity extends AbstractEntity {
   slug?: string;
   @Column()
   title: string;
-  @Column({ default: null, nullable: true })
-  @IsUrl()
-  @IsOptional()
-  photo?: string;
   @Column()
   body: string;
   @ManyToOne(type => UserEntity)
@@ -22,10 +26,18 @@ export class ArticleEntity extends AbstractEntity {
   @IsOptional()
   describtion: string;
   @Column('simple-array')
+  @IsOptional()
   tagList: string[];
-  // @Column() comments
-  // @Column() description
-  // @Column()
+  @OneToMany(
+    type => PhotoEntity,
+    photo => photo.article,
+  )
+  photos: PhotoEntity[];
+  @OneToOne(
+    type => PhotoEntity,
+    photo => photo.article,
+  )
+  photo: PhotoEntity;
   @BeforeInsert()
   titleToSlug?(): void {
     this.slug =

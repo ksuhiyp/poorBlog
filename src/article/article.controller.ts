@@ -12,7 +12,14 @@ import {
   Delete,
   HttpStatus,
   Req,
+  UploadedFile,
+  UploadedFiles,
 } from '@nestjs/common';
+import {
+  FileInterceptor,
+  FilesInterceptor,
+  FileFieldsInterceptor,
+} from '@nestjs/platform-express';
 import { ArticleService } from './article.service';
 import { ArticleEntity } from '../entities/article.entity';
 import {
@@ -49,11 +56,18 @@ export class ArticleController {
   }
   @Post()
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'main', maxCount: 1 },
+      { name: 'article', maxCount: 20 },
+    ]),
+  )
   async createArticle(
+    @UploadedFiles() files,
     @Body() body: CreateArticleDTO,
     @UserParam() user: UserEntity,
   ) {
-    return await this.articleService.createArticle(body, user);
+    return await this.articleService.createArticle(body, user, files);
   }
 
   @Put(':id')

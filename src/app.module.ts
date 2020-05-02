@@ -9,6 +9,7 @@ import { ConfigModule } from '@nestjs/config';
 import { DatabaseModule } from './common/database/database.module';
 import { ArticleModule } from './article/article.module';
 import { TagModule } from './tag/tag.module';
+import { CommonModule } from './common/common.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
@@ -17,6 +18,7 @@ import { TagModule } from './tag/tag.module';
     ArticleModule,
     AuthenticationModule,
     TagModule,
+    CommonModule,
   ],
   controllers: [AppController],
   providers: [

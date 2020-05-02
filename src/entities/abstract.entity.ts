@@ -13,7 +13,7 @@ export class AbstractEntity {
   id?: number;
   @Exclude()
   @CreateDateColumn({ update: false, type: Date })
-  createdAt: Date;
+  createdAt?: Date;
   @Exclude()
   @UpdateDateColumn({ type: Date })
   @IsOptional()

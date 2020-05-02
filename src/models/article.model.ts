@@ -1,5 +1,5 @@
 import { IsOptional, IsNumber, IsString, IsNotEmpty } from 'class-validator';
-import { WhereExpression, OrderByCondition } from 'typeorm';
+import { WhereExpression, OrderByCondition, Binary } from 'typeorm';
 import { UserResponseDTO } from './user.model';
 
 export class GetArticleByIdOrSlugQuery {
@@ -38,6 +38,8 @@ export class CreateArticleDTO {
   tagList?: string[];
   @IsOptional()
   describtion: string;
+  @IsOptional()
+  photos: any;
 }
 
 export class UpdateArticleDTO {

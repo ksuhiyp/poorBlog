@@ -10,12 +10,14 @@ import {
 } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
 import { TagEntity } from '../entities/tag.entity';
-
+import global from 'multer';
+import { PhotoEntity } from 'src/entities/photo.entity';
 @Injectable()
 export class ArticleService {
   constructor(
     @InjectRepository(ArticleEntity) private repo: Repository<ArticleEntity>,
     @InjectRepository(TagEntity) private tagRepo: Repository<TagEntity>,
+    @InjectRepository(PhotoEntity) private photoRepo: Repository<PhotoEntity>,
   ) {}
   getArticle(query?: GetArticleByIdOrSlugQuery): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
@@ -31,11 +33,19 @@ export class ArticleService {
   async createArticle(
     data: CreateArticleDTO,
     author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
+    files: MulterS3File[],
   ): Promise<ArticleEntity> {
     const articleEntity = this.repo.create(data);
     articleEntity.author = author;
     const tagList = articleEntity.tagList;
     if (tagList?.length) await this.saveTags(tagList);
+    // const photos = await this.savePhotos(files, articleEntity);
+    const articlePhoto = files.find(file => file.fieldname === 'main');
+    const articlePhotos = files.filter(file => file.fieldname !== 'main');
+    articleEntity.photo = this.photoRepo.create(articlePhoto);
+    articleEntity.photos = articlePhotos.map(photo =>
+      this.photoRepo.create(photo),
+    );
     const article = await this.repo.save(articleEntity);
     return article;
   }
@@ -85,4 +95,19 @@ export class ArticleService {
       .orIgnore()
       .execute();
   }
+
+  // private savePhotos(files: MulterS3File[], article: ArticleEntity) {
+  //   if (files) {
+  //     const photos = files.map(file => {
+  //       return this.photoRepo.create({
+  //         article,
+  //         bucket: file.bucket,
+  //         key: file.key,
+  //         location: file.location,
+  //         type: file.fieldname === 'main' ? 'main' : 'article',
+  //       });
+  //     });
+  //     return this.photoRepo.save(photos);
+  //   }
+  // }
 }
