@@ -4,13 +4,9 @@ import { DatabaseService } from './database.service';
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
-      imports: [DatabaseModule],
-      useFactory: async (databaseService: DatabaseService) =>
-        await databaseService.connectionOptions,
-      inject: [DatabaseService],
+      useClass: DatabaseService
     }),
   ],
-  providers: [DatabaseService],
-  exports: [DatabaseService],
+  exports: [TypeOrmModule],
 })
 export class DatabaseModule {}
