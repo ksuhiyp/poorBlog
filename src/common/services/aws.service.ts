@@ -1,10 +1,15 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import S3 from 'aws-sdk/clients/s3';
 import { ConfigService } from '@nestjs/config';
 import multers3 from 'multer-s3';
+import {
+  MulterModuleOptions,
+  MulterOptionsFactory,
+} from '@nestjs/platform-express';
+import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 
 @Injectable()
-export class AwsService {
+export class AwsService implements MulterOptionsFactory {
   constructor(private configService: ConfigService) {}
   get S3() {
     return new S3({
@@ -14,20 +19,33 @@ export class AwsService {
     });
   }
 
-  get multers3() {
-    return multers3({
-      s3: this.S3,
-      bucket: this.configService.get<string>('BUCKET_NAME'),
-      acl: 'public-read',
-      key: function(req: any, file, cb) {
-        const random = Math.random();
-        cb(
-          null,
-          req.body.title +
-            '-' +
-            ((Math.random() * Math.pow(36, 6)) | 0).toString(36),
-        );
-      },
-    });
+  createMulterOptions(): MulterOptions {
+    return {
+      storage: multers3({
+        s3: this.S3,
+        bucket: this.configService.get<string>('BUCKET_NAME'),
+        acl: 'public-read',
+        key: function(req: any, file, cb) {
+          const random = Math.random();
+          cb(
+            null,
+            req.body.title +
+              '-' +
+              ((Math.random() * Math.pow(36, 6)) | 0).toString(36),
+          );
+        },
+      }),
+      fileFilter: (req, file, cb) => this.filterFileExtension(req, file, cb),
+    };
+  }
+
+  private filterFileExtension(req, file, cb) {
+    if (file.mimetype.split('/').pop() === 'image') {
+      return cb(null, true);
+    }
+    return cb(
+      new HttpException('Unsupported Extension', HttpStatus.NOT_ACCEPTABLE),
+      false,
+    );
   }
 }

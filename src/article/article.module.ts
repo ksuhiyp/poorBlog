@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { Module, HttpException, HttpStatus } from '@nestjs/common';
 import { ArticleController } from './article.controller';
 import { ArticleService } from './article.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,11 +13,7 @@ import { PhotoEntity } from 'src/entities/photo.entity';
   imports: [
     TypeOrmModule.forFeature([ArticleEntity, TagEntity, PhotoEntity]),
     MulterModule.registerAsync({
-      imports: [CommonModule],
-      useFactory: (awsService: AwsService) => ({
-        storage: awsService.multers3,
-      }),
-      inject: [AwsService],
+      useClass: AwsService,
     }),
   ],
   controllers: [ArticleController],
