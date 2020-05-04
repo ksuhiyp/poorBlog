@@ -21,7 +21,12 @@ export class AwsService {
       acl: 'public-read',
       key: function(req: any, file, cb) {
         const random = Math.random();
-        cb(null, req.body.title + '-' + Math.round(random));
+        cb(
+          null,
+          req.body.title +
+            '-' +
+            ((Math.random() * Math.pow(36, 6)) | 0).toString(36),
+        );
       },
     });
   }

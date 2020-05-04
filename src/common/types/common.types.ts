@@ -40,3 +40,9 @@ interface MulterS3File extends MulterFile {
   location: string;
   etag: string;
 }
+
+interface ArticlePhotosMulterS3Files {
+
+  main: MulterS3File[];
+  article: MulterS3File[];
+}

@@ -33,15 +33,15 @@ export class ArticleService {
   async createArticle(
     data: CreateArticleDTO,
     author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
-    files: MulterS3File[],
+    files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
     const articleEntity = this.repo.create(data);
     articleEntity.author = author;
     const tagList = articleEntity.tagList;
     if (tagList?.length) await this.saveTags(tagList);
     // const photos = await this.savePhotos(files, articleEntity);
-    const articlePhoto = files.find(file => file.fieldname === 'main');
-    const articlePhotos = files.filter(file => file.fieldname !== 'main');
+    const articlePhoto = files['main'].pop();
+    const articlePhotos = files['article'].map(file => file);
     articleEntity.photo = this.photoRepo.create(articlePhoto);
     articleEntity.photos = articlePhotos.map(photo =>
       this.photoRepo.create(photo),

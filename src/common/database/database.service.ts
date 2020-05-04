@@ -21,13 +21,9 @@ import { PhotoEntity } from 'src/entities/photo.entity';
 import { PostgresConnectionOptions } from 'typeorm/driver/postgres/PostgresConnectionOptions';
 @Injectable()
 export class DatabaseService implements TypeOrmOptionsFactory {
-  constructor(
-    private configService: ConfigService,
-  ) {}
+  constructor(private configService: ConfigService) {}
 
-
-
-   createTypeOrmOptions(): PostgresConnectionOptions {
+  createTypeOrmOptions(): PostgresConnectionOptions {
     return {
       host: this.configService.get<string>('HOST'),
       port: this.configService.get<number>('DB_PORT'),
@@ -37,7 +33,7 @@ export class DatabaseService implements TypeOrmOptionsFactory {
         this.configService.get<string>('NODE_ENV') === 'production'
           ? this.configService.get<string>('PROD_DATABASE')
           : this.configService.get<string>('TESTING_DATABASE'),
-      entities: [UserEntity, ArticleEntity, TagEntity, PhotoEntity],
+      entities: [this.configService.get<string>('TYPEORM_ENTITIES')],
       name:
         this.configService.get<string>('NODE_ENV') === 'production'
           ? this.configService.get<string>('DB_CONNECTION_NAME')
@@ -47,7 +43,7 @@ export class DatabaseService implements TypeOrmOptionsFactory {
           ? true
           : true,
       synchronize:
-        this.configService.get<string>('NODE_ENV') === 'testing' ? true : false,
+        this.configService.get<string>('NODE_ENV') === 'testing' ? true : true,
       type: 'postgres',
       logger: 'advanced-console',
     };

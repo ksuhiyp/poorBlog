@@ -3,7 +3,7 @@ import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import { ArticleEntity } from './article.entity';
 
-@Entity()
+@Entity('photos')
 export class PhotoEntity extends AbstractEntity {
   @Column()
   bucket: string;
