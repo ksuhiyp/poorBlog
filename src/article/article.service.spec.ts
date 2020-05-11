@@ -18,7 +18,7 @@ describe('ArticleService', () => {
     photo: null,
     toJson: (() => this).bind(this),
   };
-  let mockArticle: ArticleEntity = {
+  let mockArticle: CreateArticle = {
     author: mockAuthor,
     createdAt: new Date(process.env.MOCK_DATE),
     body: 'test',
@@ -90,7 +90,7 @@ describe('ArticleService', () => {
       const save = jest
         .spyOn(repo, 'save')
         .mockImplementation(() => Promise.resolve(mockArticle));
-      const result = service.createArticle(mockArticle, mockAuthor);
+      const result = service.createArticle(mockArticle, mockAuthor, null);
       expect(create).toBeCalledTimes(1);
       expect(create).toBeCalledWith(mockArticle);
       expect(save).toBeCalledTimes(1);
@@ -148,7 +148,7 @@ describe('ArticleService', () => {
       expect(result).resolves.toEqual({
         affected: 0,
         generatedMaps: [],
-        raw: "",
+        raw: '',
       });
     });
   });

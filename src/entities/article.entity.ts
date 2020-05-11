@@ -41,13 +41,13 @@ export class ArticleEntity extends AbstractEntity {
     photo => photo.article,
     { cascade: true },
   )
-  photos: PhotoEntity[];
+  photos?: PhotoEntity[];
   @OneToOne(
     type => PhotoEntity,
     photo => photo.article,
     { cascade: true },
   )
-  photo: PhotoEntity;
+  photo?: PhotoEntity;
   @BeforeInsert()
   titleToSlug?(): void {
     this.slug =
