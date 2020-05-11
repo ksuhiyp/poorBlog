@@ -216,7 +216,7 @@ describe('AppController (e2e)', () => {
     //         .send({
     //           title: 'test',
     //           body: 'test',
-    //           describtion: 'test',
+    //           description: 'test',
     //           author: 3,
     //         })
     //         .expect(({ body }) => {
@@ -231,7 +231,7 @@ describe('AppController (e2e)', () => {
     //         .post('/article')
     //         .send({
     //           title: 1,
-    //           describtion: 'test',
+    //           description: 'test',
     //         })
     //         .expect(400);
     //     });

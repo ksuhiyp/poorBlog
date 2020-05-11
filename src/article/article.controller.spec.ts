@@ -31,7 +31,7 @@ describe('Article Controller', () => {
   };
   let createArticleBody: CreateArticleDTO = {
     body: 'test',
-    describtion: 'test',
+    description: 'test',
     title: 'test',
   };
   let updateArticleBody: UpdateArticleDTO = {

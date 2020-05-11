@@ -53,6 +53,11 @@ export class UserUpdateDTO {
   photo?: string;
 }
 
+export class UserRequestDTO {
+  id: number;
+  username: string;
+}
+
 export interface UserResponseDTO {
   readonly id: number;
   readonly username: string;

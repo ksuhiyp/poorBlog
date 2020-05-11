@@ -22,7 +22,7 @@ describe('ArticleService', () => {
     author: mockAuthor,
     createdAt: new Date(process.env.MOCK_DATE),
     body: 'test',
-    describtion: 'test',
+    description: 'test',
     title: 'test',
     tagList: [],
     toJson: (() => this).bind(this),

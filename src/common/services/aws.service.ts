@@ -34,13 +34,16 @@ export class AwsService implements MulterOptionsFactory {
               ((Math.random() * Math.pow(36, 6)) | 0).toString(36),
           );
         },
+        contentType: function(req: any, file, cb) {
+          cb(null, file.mimetype);
+        },
       }),
       fileFilter: (req, file, cb) => this.filterFileExtension(req, file, cb),
     };
   }
 
   private filterFileExtension(req, file, cb) {
-    if (file.mimetype.split('/').pop() === 'image') {
+    if (file.mimetype.split('/').shift() === 'image') {
       return cb(null, true);
     }
     return cb(

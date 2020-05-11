@@ -43,7 +43,7 @@ export class DatabaseService implements TypeOrmOptionsFactory {
           ? true
           : true,
       synchronize:
-        this.configService.get<string>('NODE_ENV') === 'testing' ? true : false,
+        this.configService.get<string>('NODE_ENV') === 'testing' ? true : true,
       type: 'postgres',
       logger: 'advanced-console',
     };
