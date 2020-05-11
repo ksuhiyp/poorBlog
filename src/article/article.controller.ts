@@ -31,6 +31,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
 import { UserEntity } from '../entities/user.entity';
 import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.interceptor';
+import { UserRequestDTO } from 'src/models/user.model';
 
 @Controller('article')
 export class ArticleController {
@@ -58,16 +59,16 @@ export class ArticleController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'main', maxCount:1},
-      { name: 'article', maxCount: 10 },
+      { name: 'photo', maxCount: 1 },
+      { name: 'photos', maxCount: 10 },
     ]),
   )
   async createArticle(
     @UploadedFiles() files,
     @Body() body: CreateArticleDTO,
-    @UserParam() user: UserEntity,
+    @UserParam() user: UserRequestDTO,
   ) {
-    return await this.articleService.createArticle(body, user, files);
+    return this.articleService.createArticle(body, user, files);
   }
 
   @Put(':id')

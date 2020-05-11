@@ -10,8 +10,9 @@ import {
 } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
 import { TagEntity } from '../entities/tag.entity';
-import global from 'multer';
 import { PhotoEntity } from 'src/entities/photo.entity';
+import { Tag } from 'aws-sdk/clients/swf';
+import { UserRequestDTO } from 'src/models/user.model';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -32,20 +33,40 @@ export class ArticleService {
   }
   async createArticle(
     data: CreateArticleDTO,
-    author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
+    author: UserRequestDTO,
     files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
-    const articleEntity = this.repo.create(data);
-    articleEntity.author = author;
-    const tagList = articleEntity.tagList;
-    if (tagList?.length) await this.saveTags(tagList);
-    // const photos = await this.savePhotos(files, articleEntity);
-    const articlePhoto = files['main'].pop();
-    const articlePhotos = files['article'].map(file => file);
-    articleEntity.photo = this.photoRepo.create(articlePhoto);
-    articleEntity.photos = articlePhotos.map(photo =>
-      this.photoRepo.create(photo),
+    const articleEntity = new ArticleEntity();
+    articleEntity.title = data.title;
+    articleEntity.body = data.body;
+    articleEntity.description = data.description;
+    articleEntity.tagList = data.tagList.map(tag =>
+      this.tagRepo.create({ title: tag }),
     );
+
+    articleEntity.author = author;
+    const photo = files['photo']?.pop() as MulterS3File;
+    const photos: MulterS3File[] = files['photos']?.map(
+      file => file as MulterS3File,
+    );
+    if (photo) {
+      articleEntity.photo = this.photoRepo.create(photo);
+      articleEntity.photo.type = 'main';
+    }
+    if (photos?.length) {
+      articleEntity.photos = photos.map(photo => {
+        const photoEntity = this.photoRepo.create(photo);
+        photoEntity.type = 'article';
+        return photoEntity;
+      });
+    }
+    await this.tagRepo
+      .createQueryBuilder()
+      .insert()
+      .into(TagEntity)
+      .values(articleEntity.tagList)
+      .orIgnore()
+      .execute();
     const article = await this.repo.save(articleEntity);
     return article;
   }
@@ -81,10 +102,11 @@ export class ArticleService {
     return userId === authorId ? true : false;
   }
 
-  private async saveTags(tagList: string[]): Promise<InsertResult> {
-    const tagEntities = tagList.map(title => {
+  private async saveTags(tagList: any): Promise<InsertResult> {
+    tagList = JSON.parse(tagList) as Tag[];
+    const tagEntities = tagList.map(tag => {
       const tagEntity = new TagEntity();
-      tagEntity.title = title;
+      tagEntity.title = tag.title;
       return tagEntity;
     });
     return this.tagRepo

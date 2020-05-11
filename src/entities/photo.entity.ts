@@ -14,12 +14,10 @@ export class PhotoEntity extends AbstractEntity {
   @ManyToOne(
     type => ArticleEntity,
     article => article.photos,
-    { cascade: true },
   )
   @OneToOne(
     type => ArticleEntity,
     article => article.photo,
-    { cascade: true },
   )
   article?: ArticleEntity;
   @Column()

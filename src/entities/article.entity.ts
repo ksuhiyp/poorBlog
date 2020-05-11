@@ -5,12 +5,15 @@ import {
   BeforeInsert,
   OneToMany,
   OneToOne,
+  ManyToMany,
+  JoinTable,
 } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
 import { IsOptional } from 'class-validator';
 import { PhotoEntity } from './photo.entity';
+import { TagEntity } from './tag.entity';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
@@ -24,18 +27,25 @@ export class ArticleEntity extends AbstractEntity {
   author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>;
   @Column({ nullable: true })
   @IsOptional()
-  describtion: string;
-  @Column('simple-array')
+  description: string;
+
   @IsOptional()
-  tagList: string[];
+  @ManyToMany(
+    type => TagEntity,
+    tag => tag.articles,
+  )
+  @JoinTable()
+  tagList: TagEntity[];
   @OneToMany(
     type => PhotoEntity,
     photo => photo.article,
+    { cascade: true },
   )
   photos: PhotoEntity[];
   @OneToOne(
     type => PhotoEntity,
     photo => photo.article,
+    { cascade: true },
   )
   photo: PhotoEntity;
   @BeforeInsert()

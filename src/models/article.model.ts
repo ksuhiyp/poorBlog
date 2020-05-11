@@ -1,6 +1,17 @@
-import { IsOptional, IsNumber, IsString, IsNotEmpty } from 'class-validator';
+import {
+  IsOptional,
+  IsNumber,
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  ValidateNested,
+} from 'class-validator';
 import { WhereExpression, OrderByCondition, Binary } from 'typeorm';
 import { UserResponseDTO } from './user.model';
+import { TagEntity } from 'src/entities/tag.entity';
+import { Tag } from 'aws-sdk/clients/swf';
+import { TagDTO } from './tag.model';
+import { Type } from 'class-transformer';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -27,7 +38,7 @@ export class GetArticlesQuery {
   where?: WhereExpression;
 }
 
-export class CreateArticleDTO {
+export class ArticleDTO {
   @IsString()
   @IsNotEmpty()
   title: string;
@@ -37,10 +48,10 @@ export class CreateArticleDTO {
   @IsOptional()
   tagList?: string[];
   @IsOptional()
-  describtion: string;
-  @IsOptional()
-  photos: any;
+  description: string;
+  
 }
+export class CreateArticleDTO extends ArticleDTO {}
 
 export class UpdateArticleDTO {
   @IsString()
@@ -50,9 +61,9 @@ export class UpdateArticleDTO {
   @IsOptional()
   body?: string;
   @IsOptional()
-  tagList?: string[];
+  tagList?: TagEntity[];
   @IsOptional()
-  describtion?: string;
+  description?: string;
 }
 
 export class articleResponseDTO {
@@ -62,7 +73,7 @@ export class articleResponseDTO {
   slug?: string;
   title?: string;
   body?: string;
-  describtion?: string;
+  description?: string;
   author?: UserResponseDTO;
   tagList?: string[];
 }
