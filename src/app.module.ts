@@ -24,7 +24,10 @@ import { CommonModule } from './common/common.module';
   providers: [
     AppService,
     { provide: APP_FILTER, useClass: HttpExceptionFilter },
-    { provide: APP_PIPE, useClass: ValidationPipe },
+    {
+      provide: APP_PIPE,
+      useFactory: () => new ValidationPipe({ transform: true }),
+    },
   ],
 })
 export class AppModule {}
