@@ -73,12 +73,19 @@ export class ArticleController {
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(
+    FileFieldsInterceptor([
+      { name: 'photo', maxCount: 1 },
+      { name: 'photos', maxCount: 10 },
+    ]),
+  )
   async updateArticle(
+    @UploadedFiles() files,
     @Body() body: UpdateArticleDTO,
     @UserParam() user: UserEntity,
     @Param('id') id: number,
   ) {
-    return this.articleService.updateArticle(id, body, user);
+    return this.articleService.updateArticle(id, body, user,files);
   }
 
   @Delete(':id')

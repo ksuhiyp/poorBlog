@@ -36,30 +36,9 @@ export class ArticleService {
     author: UserRequestDTO,
     files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
-    const articleEntity = new ArticleEntity();
-    articleEntity.title = data.title;
-    articleEntity.body = data.body;
-    articleEntity.description = data.description;
-    articleEntity.tagList = data.tagList.map(tag =>
-      this.tagRepo.create({ title: tag }),
-    );
-
-    articleEntity.author = author;
-    const photo = files['photo']?.pop() as MulterS3File;
-    const photos: MulterS3File[] = files['photos']?.map(
-      file => file as MulterS3File,
-    );
-    if (photo) {
-      articleEntity.photo = this.photoRepo.create(photo);
-      articleEntity.photo.type = 'main';
-    }
-    if (photos?.length) {
-      articleEntity.photos = photos.map(photo => {
-        const photoEntity = this.photoRepo.create(photo);
-        photoEntity.type = 'article';
-        return photoEntity;
-      });
-    }
+    const articleEntity = new ArticleEntity(data,author,files);
+    
+    
     await this.tagRepo
       .createQueryBuilder()
       .insert()
@@ -74,6 +53,7 @@ export class ArticleService {
     id: number,
     data: UpdateArticleDTO,
     user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
+    files: ArticlePhotosMulterS3Files,
   ): Promise<UpdateResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
