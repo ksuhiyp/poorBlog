@@ -7,7 +7,6 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
-  Repository,
 } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
@@ -15,22 +14,9 @@ import slugify from 'slugify';
 import { IsOptional } from 'class-validator';
 import { PhotoEntity } from './photo.entity';
 import { TagEntity } from './tag.entity';
-import { CreateArticleDTO } from 'src/models/article.model';
-import { InjectRepository } from '@nestjs/typeorm';
-import { UserRequestDTO } from 'src/models/user.model';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
-  constructor(
-    data: CreateArticleDTO,
-    author: UserRequestDTO,
-    files?: ArticlePhotosMulterS3Files,
-    @InjectRepository(TagEntity) private tagRepo?: Repository<TagEntity>,
-    @InjectRepository(PhotoEntity) private photoRepo?: Repository<PhotoEntity>,
-  ) {
-    super();
-    this.initArticle(data, author, files);
-  }
   @Column()
   slug?: string;
   @Column()
@@ -73,33 +59,5 @@ export class ArticleEntity extends AbstractEntity {
     const article = this;
     article.author = article.author.toJson();
     return article;
-  }
-
-  private initArticle(
-    data: CreateArticleDTO,
-    author,
-    files: ArticlePhotosMulterS3Files,
-  ) {
-    if (data) {
-      this.title = data.title;
-      this.body = data.body;
-      this.description = data.description;
-      this.tagList = data.tagList.map(tag =>
-        this.tagRepo.create({ title: tag }),
-      );
-      if (files.photo.length) {
-        this.photo = this.photoRepo.create(files.photo.pop());
-        this.photo.type = 'main';
-      }
-      if (files.photos.length) {
-        this.photos = files.photos.map(photo => {
-          const photoEntity = this.photoRepo.create(photo);
-          photoEntity.type = 'article';
-          return photoEntity;
-        });
-      }
-
-      this.author = author;
-    }
   }
 }

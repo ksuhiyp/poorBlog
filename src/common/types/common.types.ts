@@ -42,6 +42,7 @@ interface MulterS3File extends MulterFile {
 }
 
 interface ArticlePhotosMulterS3Files {
-  photo: MulterS3File[];
-  photos: MulterS3File[];
+
+  main: MulterS3File[];
+  article: MulterS3File[];
 }

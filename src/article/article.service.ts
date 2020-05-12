@@ -36,8 +36,37 @@ export class ArticleService {
     author: UserRequestDTO,
     files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
-    const articleEntity = new ArticleEntity(data, author, files);
-    await this.saveTags(articleEntity.tagList);
+    const articleEntity = new ArticleEntity();
+    articleEntity.title = data.title;
+    articleEntity.body = data.body;
+    articleEntity.description = data.description;
+    articleEntity.tagList = data.tagList.map(tag =>
+      this.tagRepo.create({ title: tag }),
+    );
+
+    articleEntity.author = author;
+    const photo = files['photo']?.pop() as MulterS3File;
+    const photos: MulterS3File[] = files['photos']?.map(
+      file => file as MulterS3File,
+    );
+    if (photo) {
+      articleEntity.photo = this.photoRepo.create(photo);
+      articleEntity.photo.type = 'main';
+    }
+    if (photos?.length) {
+      articleEntity.photos = photos.map(photo => {
+        const photoEntity = this.photoRepo.create(photo);
+        photoEntity.type = 'article';
+        return photoEntity;
+      });
+    }
+    await this.tagRepo
+      .createQueryBuilder()
+      .insert()
+      .into(TagEntity)
+      .values(articleEntity.tagList)
+      .orIgnore()
+      .execute();
     const article = await this.repo.save(articleEntity);
     return article;
   }
@@ -45,7 +74,6 @@ export class ArticleService {
     id: number,
     data: UpdateArticleDTO,
     user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>,
-    files: ArticlePhotosMulterS3Files,
   ): Promise<UpdateResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
@@ -74,14 +102,34 @@ export class ArticleService {
     return userId === authorId ? true : false;
   }
 
-  private async saveTags(tagList: TagEntity[]): Promise<InsertResult> {
+  private async saveTags(tagList: any): Promise<InsertResult> {
+    tagList = JSON.parse(tagList) as Tag[];
+    const tagEntities = tagList.map(tag => {
+      const tagEntity = new TagEntity();
+      tagEntity.title = tag.title;
+      return tagEntity;
+    });
     return this.tagRepo
       .createQueryBuilder()
       .insert()
       .into(TagEntity)
-      .values(tagList)
+      .values(tagEntities)
       .orIgnore()
       .execute();
   }
 
+  // private savePhotos(files: MulterS3File[], article: ArticleEntity) {
+  //   if (files) {
+  //     const photos = files.map(file => {
+  //       return this.photoRepo.create({
+  //         article,
+  //         bucket: file.bucket,
+  //         key: file.key,
+  //         location: file.location,
+  //         type: file.fieldname === 'main' ? 'main' : 'article',
+  //       });
+  //     });
+  //     return this.photoRepo.save(photos);
+  //   }
+  // }
 }
