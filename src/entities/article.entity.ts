@@ -80,17 +80,26 @@ export class ArticleEntity extends AbstractEntity {
     author,
     files: ArticlePhotosMulterS3Files,
   ) {
-    this.title = data.title;
-    this.body = data.body;
-    this.description = data.description;
-    this.tagList = data.tagList.map(tag => this.tagRepo.create({ title: tag }));
-    this.photo = this.photoRepo.create(files.photo.pop());
-    this.photo.type = 'main';
-    this.photos = files.photos.map(photo => {
-      const photoEntity = this.photoRepo.create(photo);
-      photoEntity.type = 'article';
-      return photoEntity;
-    });
-    this.author = author;
+    if (data) {
+      this.title = data.title;
+      this.body = data.body;
+      this.description = data.description;
+      this.tagList = data.tagList.map(tag =>
+        this.tagRepo.create({ title: tag }),
+      );
+      if (files.photo.length) {
+        this.photo = this.photoRepo.create(files.photo.pop());
+        this.photo.type = 'main';
+      }
+      if (files.photos.length) {
+        this.photos = files.photos.map(photo => {
+          const photoEntity = this.photoRepo.create(photo);
+          photoEntity.type = 'article';
+          return photoEntity;
+        });
+      }
+
+      this.author = author;
+    }
   }
 }

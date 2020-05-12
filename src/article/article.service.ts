@@ -36,16 +36,8 @@ export class ArticleService {
     author: UserRequestDTO,
     files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
-    const articleEntity = new ArticleEntity(data,author,files);
-    
-    
-    await this.tagRepo
-      .createQueryBuilder()
-      .insert()
-      .into(TagEntity)
-      .values(articleEntity.tagList)
-      .orIgnore()
-      .execute();
+    const articleEntity = new ArticleEntity(data, author, files);
+    await this.saveTags(articleEntity.tagList);
     const article = await this.repo.save(articleEntity);
     return article;
   }
@@ -82,34 +74,14 @@ export class ArticleService {
     return userId === authorId ? true : false;
   }
 
-  private async saveTags(tagList: any): Promise<InsertResult> {
-    tagList = JSON.parse(tagList) as Tag[];
-    const tagEntities = tagList.map(tag => {
-      const tagEntity = new TagEntity();
-      tagEntity.title = tag.title;
-      return tagEntity;
-    });
+  private async saveTags(tagList: TagEntity[]): Promise<InsertResult> {
     return this.tagRepo
       .createQueryBuilder()
       .insert()
       .into(TagEntity)
-      .values(tagEntities)
+      .values(tagList)
       .orIgnore()
       .execute();
   }
 
-  // private savePhotos(files: MulterS3File[], article: ArticleEntity) {
-  //   if (files) {
-  //     const photos = files.map(file => {
-  //       return this.photoRepo.create({
-  //         article,
-  //         bucket: file.bucket,
-  //         key: file.key,
-  //         location: file.location,
-  //         type: file.fieldname === 'main' ? 'main' : 'article',
-  //       });
-  //     });
-  //     return this.photoRepo.save(photos);
-  //   }
-  // }
 }
