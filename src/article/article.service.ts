@@ -25,7 +25,7 @@ export class ArticleService {
       where: {
         ...query,
       },
-      relations: ['author','photos'],
+      relations: ['author'],
     });
   }
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
