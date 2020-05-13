@@ -25,7 +25,7 @@ export class ArticleService {
       where: {
         ...query,
       },
-      relations: ['author'],
+      relations: ['author','photos'],
     });
   }
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
@@ -36,30 +36,7 @@ export class ArticleService {
     author: UserRequestDTO,
     files: ArticlePhotosMulterS3Files,
   ): Promise<ArticleEntity> {
-    const articleEntity = new ArticleEntity();
-    articleEntity.title = data.title;
-    articleEntity.body = data.body;
-    articleEntity.description = data.description;
-    articleEntity.tagList = data.tagList.map(tag =>
-      this.tagRepo.create({ title: tag }),
-    );
-
-    articleEntity.author = author;
-    const photo = files['photo']?.pop() as MulterS3File;
-    const photos: MulterS3File[] = files['photos']?.map(
-      file => file as MulterS3File,
-    );
-    if (photo) {
-      articleEntity.photo = this.photoRepo.create(photo);
-      articleEntity.photo.type = 'main';
-    }
-    if (photos?.length) {
-      articleEntity.photos = photos.map(photo => {
-        const photoEntity = this.photoRepo.create(photo);
-        photoEntity.type = 'article';
-        return photoEntity;
-      });
-    }
+    const articleEntity = await this.initArticleEntity(data, author, files);
     await this.tagRepo
       .createQueryBuilder()
       .insert()
@@ -132,4 +109,58 @@ export class ArticleService {
   //     return this.photoRepo.save(photos);
   //   }
   // }
+
+  private async initArticleEntity(
+    data: Partial<CreateArticleDTO>,
+    author: UserRequestDTO,
+    files: ArticlePhotosMulterS3Files,
+  ): Promise<ArticleEntity> {
+    const articleEntity = new ArticleEntity();
+    articleEntity.title = data.title;
+    articleEntity.body = data.body;
+    articleEntity.description = data.description;
+    articleEntity.tagList = await this.initTaglistEntity(data);
+    articleEntity.author = author;
+    articleEntity.photos = this.initArticlePhotos(files, articleEntity);
+    return articleEntity;
+  }
+
+  private initArticlePhotos(
+    files: ArticlePhotosMulterS3Files,
+    articleEntity: ArticleEntity,
+  ): PhotoEntity[] {
+    const poster = files['poster']?.pop() as MulterS3File;
+    const pictures: MulterS3File[] = files['pictures']?.map(
+      file => file as MulterS3File,
+    );
+    articleEntity.photos = [];
+    if (poster) {
+      const photoEntity = this.photoRepo.create(poster);
+      photoEntity.type = 'poster';
+      articleEntity.photos.push(photoEntity);
+    }
+    if (pictures?.length) {
+      const photoEntities = pictures.map(photo => {
+        const photoEntity = this.photoRepo.create(photo);
+        photoEntity.type = 'picture';
+        return photoEntity;
+      });
+      articleEntity.photos.push(...photoEntities);
+    }
+    return articleEntity.photos;
+  }
+  private initTaglistEntity(data: Partial<CreateArticleDTO>) {
+    return Promise.all(
+      data.tagList.map(async tag => {
+        const existedTag = await this.tagRepo.findOne({
+          where: { title: tag },
+        });
+        if (existedTag) {
+          return existedTag;
+        } else {
+          return this.tagRepo.create({ title: tag });
+        }
+      }),
+    );
+  }
 }

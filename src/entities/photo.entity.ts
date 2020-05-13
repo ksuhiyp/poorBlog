@@ -11,15 +11,12 @@ export class PhotoEntity extends AbstractEntity {
   location: string;
   @Column()
   key: string;
+
   @ManyToOne(
     type => ArticleEntity,
     article => article.photos,
   )
-  @OneToOne(
-    type => ArticleEntity,
-    article => article.photo,
-  )
-  article?: ArticleEntity;
+  article?: ArticleEntity[];
   @Column()
-  type: 'article' | 'main';
+  type: 'picture' | 'poster';
 }

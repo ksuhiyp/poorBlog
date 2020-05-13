@@ -59,8 +59,8 @@ export class ArticleController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(
     FileFieldsInterceptor([
-      { name: 'photo', maxCount: 1 },
-      { name: 'photos', maxCount: 10 },
+      { name: 'poster', maxCount: 1 },
+      { name: 'pictures', maxCount: 10 },
     ]),
   )
   async createArticle(

@@ -7,6 +7,7 @@ import {
   OneToOne,
   ManyToMany,
   JoinTable,
+  JoinColumn,
 } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
@@ -33,21 +34,17 @@ export class ArticleEntity extends AbstractEntity {
   @ManyToMany(
     type => TagEntity,
     tag => tag.articles,
+    { cascade: true },
   )
   @JoinTable()
   tagList: TagEntity[];
   @OneToMany(
     type => PhotoEntity,
     photo => photo.article,
-    { cascade: true },
+    { cascade: true, eager: true },
   )
+  @JoinColumn()
   photos?: PhotoEntity[];
-  @OneToOne(
-    type => PhotoEntity,
-    photo => photo.article,
-    { cascade: true },
-  )
-  photo?: PhotoEntity;
   @BeforeInsert()
   titleToSlug?(): void {
     this.slug =
