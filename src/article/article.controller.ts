@@ -57,33 +57,30 @@ export class ArticleController {
   }
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  @UseInterceptors(
-    FileFieldsInterceptor([
-      { name: 'poster', maxCount: 1 },
-      { name: 'pictures', maxCount: 10 },
-    ]),
-  )
   async createArticle(
-    @UploadedFiles() files,
-    @Body() body: CreateArticleDTO,
-    @UserParam() user: UserRequestDTO,
-  ) {
-    return this.articleService.createArticle(body, user, files);
+    @Body() body: ArticleEntity,
+    @UserParam() Author: UserEntity,
+  ): Promise<ArticleEntity> {
+    return this.articleService.createArticle(body, Author);
   }
 
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
+    @UploadedFiles() files,
     @Body() body: UpdateArticleDTO,
-    @UserParam() user: UserEntity,
+    @UserParam() user: UserRequestDTO,
     @Param('id') id: number,
   ) {
-    return this.articleService.updateArticle(id, body, user);
+    return this.articleService.updateArticle(id, body, user, files);
   }
 
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  async deleteArticle(@Param('id') id: number, @UserParam() user: UserEntity) {
+  async deleteArticle(
+    @Param('id') id: number,
+    @UserParam() user: UserRequestDTO,
+  ) {
     return await this.articleService.deleteArticle(id, user);
   }
 }

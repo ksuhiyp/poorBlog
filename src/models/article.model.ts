@@ -12,6 +12,8 @@ import { TagEntity } from 'src/entities/tag.entity';
 import { Tag } from 'aws-sdk/clients/swf';
 import { TagDTO } from './tag.model';
 import { Type } from 'class-transformer';
+import { UserEntity } from 'src/entities/user.entity';
+import { Username } from 'aws-sdk/clients/appstream';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -43,15 +45,22 @@ export class ArticleDTO {
   @IsNotEmpty()
   title: string;
   @IsString()
-  @IsNotEmpty()
+  @IsOptional()
   body: string;
   @IsOptional()
-  tagList?: string[];
+  @IsArray()
+  @Type(() => TagEntity)
+  tagList?: TagEntity[];
   @IsOptional()
   description: string;
-  
 }
-export class CreateArticleDTO extends ArticleDTO {}
+export class CreateArticleDTO {
+  @IsString()
+  @IsNotEmpty()
+  title: string;
+  @Type(() => UserEntity)
+  author: Pick<UserEntity, 'username' | 'id'>;
+}
 
 export class UpdateArticleDTO {
   @IsString()
