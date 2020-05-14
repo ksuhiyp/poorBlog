@@ -67,12 +67,11 @@ export class ArticleController {
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
-    @UploadedFiles() files,
     @Body() body: UpdateArticleDTO,
-    @UserParam() user: UserRequestDTO,
+    @UserParam() user: Partial<UserEntity>,
     @Param('id') id: number,
   ) {
-    return this.articleService.updateArticle(id, body, user, files);
+    return this.articleService.updateArticle(id, body, user);
   }
 
   @Delete(':id')

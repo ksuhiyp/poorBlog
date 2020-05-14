@@ -12,38 +12,46 @@ import {
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
-import { IsOptional } from 'class-validator';
+import { IsOptional, IsArray } from 'class-validator';
 import { PhotoEntity } from './photo.entity';
 import { TagEntity } from './tag.entity';
 import { UserRequestDTO } from 'src/models/user.model';
 import { Bool } from 'aws-sdk/clients/clouddirectory';
 import { Type } from 'class-transformer';
 
-@Entity('articles')
+@Entity('article')
 export class ArticleEntity extends AbstractEntity {
   @Column()
   slug?: string;
+
   @Column({ type: 'boolean', default: 'true' })
   isDraft: boolean;
+
   @Column()
   title: string;
+
   @Column({ nullable: true, default: null })
   body?: string;
+
   @ManyToOne(type => UserEntity)
   @Type(() => UserEntity)
   author: Partial<UserEntity>;
+
   @Column({ nullable: true })
   @IsOptional()
   description: string;
 
   @IsOptional()
+  @IsArray()
+  @Type(() => TagEntity)
   @ManyToMany(
-    type => TagEntity,
+    () => TagEntity,
     tag => tag.articles,
     { cascade: true },
   )
   @JoinTable()
-  tagList: TagEntity[];
+  tags: TagEntity[];
+
   @OneToMany(
     type => PhotoEntity,
     photo => photo.article,
@@ -51,6 +59,7 @@ export class ArticleEntity extends AbstractEntity {
   )
   @JoinColumn()
   photos?: PhotoEntity[];
+
   @BeforeInsert()
   titleToSlug?(): void {
     this.slug =
@@ -58,9 +67,11 @@ export class ArticleEntity extends AbstractEntity {
       '-' +
       ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
-  isArticleAuthor?(attempter: UserRequestDTO): Boolean {
+
+  isArticleAuthor?(attempter: Partial<UserEntity>): Boolean {
     return attempter.id === this.author.id;
   }
+
   toJson?() {
     const article = this;
     article.author = article.author.toJson();

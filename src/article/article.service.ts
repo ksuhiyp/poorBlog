@@ -1,7 +1,14 @@
 import { Injectable, ForbiddenException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
-import { Repository, UpdateResult, DeleteResult, InsertResult } from 'typeorm';
+import {
+  Repository,
+  UpdateResult,
+  DeleteResult,
+  InsertResult,
+  ConnectionManager,
+  getConnection,
+} from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
   GetArticlesQuery,
@@ -11,10 +18,7 @@ import {
 import { UserEntity } from 'src/entities/user.entity';
 import { TagEntity } from '../entities/tag.entity';
 import { PhotoEntity } from 'src/entities/photo.entity';
-import { Tag } from 'aws-sdk/clients/swf';
 import { UserRequestDTO } from 'src/models/user.model';
-import { plainToClass, deserializeArray } from 'class-transformer';
-import { deserialize } from 'v8';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -56,17 +60,19 @@ export class ArticleService {
   }
   async updateArticle(
     id: number,
-    data: Partial<ArticleEntity>,
-    user: UserRequestDTO,
-    files: ArticlePhotosMulterS3Files,
-  ): Promise<UpdateResult> {
+    newArticle: Partial<ArticleEntity>,
+    user: Partial<UserEntity>,
+  ): Promise<ArticleEntity> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
     });
     if (!article.isArticleAuthor(user)) {
       throw new ForbiddenException("You don't own the article");
     }
-    return this.repo.update({ id }, data);
+    const TagEntities = await this.initTaglistEntities(newArticle.tags);
+    newArticle.tags = TagEntities;
+    newArticle = this.repo.merge(article, newArticle);
+    return this.repo.save(newArticle);
   }
   async deleteArticle(id: number, user: UserRequestDTO): Promise<DeleteResult> {
     const article = await this.repo.findOneOrFail(id, {
@@ -118,22 +124,18 @@ export class ArticleService {
     }
     return articleEntity.photos;
   }
-  private initTaglistEntities(data: Partial<CreateArticleDTO>) {
-    // return Promise.all(
-    //   data.tagList.map(async tag => {
-    //     const existedTag = await this.tagRepo.findOne({
-    //       where: { title: tag },
-    //     });
-    //     if (existedTag) {
-    //       return existedTag;
-    //     } else {
-    //       return this.tagRepo.create({ title: tag });
-    //     }
-    //   }),
-    // );
-    // const tagEntities = data.tagList.map(tag =>
-    // deserializeArray(TagEntity, data.tagList),
-    // );
-    // return tagEntities;
+  private initTaglistEntities(tags: TagEntity[]) {
+    return Promise.all(
+      tags.map(async tag => {
+        const existedTag = await this.tagRepo.findOne({
+          where: { title: tag.title },
+        });
+        if (existedTag) {
+          return existedTag;
+        } else {
+          return this.tagRepo.create(tag);
+        }
+      }),
+    );
   }
 }

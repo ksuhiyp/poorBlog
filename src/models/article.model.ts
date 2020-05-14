@@ -70,7 +70,9 @@ export class UpdateArticleDTO {
   @IsOptional()
   body?: string;
   @IsOptional()
-  tagList?: TagEntity[];
+  @IsArray()
+  @Type(() => TagEntity)
+  tags?: TagEntity[];
   @IsOptional()
   description?: string;
 }

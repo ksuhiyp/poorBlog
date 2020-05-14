@@ -3,6 +3,7 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  Column,
 } from 'typeorm';
 import { IsOptional } from 'class-validator';
 import { Exclude } from 'class-transformer';
@@ -15,7 +16,7 @@ export class AbstractEntity {
   @CreateDateColumn({ update: false, type: Date })
   createdAt?: Date;
   @Exclude()
-  @UpdateDateColumn({ type: Date })
+  @UpdateDateColumn({ type: Date, insert: false })
   @IsOptional()
   updatedAt?: Date;
 }
