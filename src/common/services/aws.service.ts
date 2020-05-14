@@ -28,9 +28,10 @@ export class AwsService implements MulterOptionsFactory {
           const random = Math.random();
           cb(
             null,
-            req.body.title +
-              '-' +
-              ((Math.random() * Math.pow(36, 6)) | 0).toString(36),
+            `${file.filename}-${(
+              (Math.random() * Math.pow(36, 6)) |
+              0
+            ).toString(36)}`,
           );
         },
         contentType: function(req: any, file, cb) {
