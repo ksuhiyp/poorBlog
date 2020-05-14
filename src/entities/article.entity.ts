@@ -18,6 +18,8 @@ import { TagEntity } from './tag.entity';
 import { UserRequestDTO } from 'src/models/user.model';
 import { Bool } from 'aws-sdk/clients/clouddirectory';
 import { Type } from 'class-transformer';
+import { ImageEntity } from './image.entity';
+import { PosterEntity } from './poster.entity';
 
 @Entity('article')
 export class ArticleEntity extends AbstractEntity {
@@ -53,12 +55,19 @@ export class ArticleEntity extends AbstractEntity {
   tags: TagEntity[];
 
   @OneToMany(
-    type => PhotoEntity,
-    photo => photo.article,
+    type => ImageEntity,
+    image => image.article,
     { cascade: true, eager: true },
   )
   @JoinColumn()
-  photos?: PhotoEntity[];
+  images?: ImageEntity[];
+  @OneToOne(
+    () => PosterEntity,
+    poster => poster.article,
+    { cascade: true },
+  )
+  @JoinColumn()
+  poster: PosterEntity;
 
   @BeforeInsert()
   titleToSlug?(): void {

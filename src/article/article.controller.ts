@@ -64,6 +64,17 @@ export class ArticleController {
     return this.articleService.createArticle(body, Author);
   }
 
+  @Put(':id/poster')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('poster'))
+  async patchArticlePoster(
+    @Param('id')
+    id: number,
+    @UploadedFile() poster: MulterS3File,
+  ) {
+    return this.articleService.patchArticlePoster(id, poster);
+  }
+
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
@@ -73,7 +84,6 @@ export class ArticleController {
   ) {
     return this.articleService.updateArticle(id, body, user);
   }
-
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
   async deleteArticle(

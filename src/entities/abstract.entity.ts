@@ -9,7 +9,7 @@ import { IsOptional } from 'class-validator';
 import { Exclude } from 'class-transformer';
 
 @Entity()
-export class AbstractEntity {
+export abstract class AbstractEntity {
   @PrimaryGeneratedColumn()
   id?: number;
   @Exclude()

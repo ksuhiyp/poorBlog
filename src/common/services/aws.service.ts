@@ -7,7 +7,6 @@ import {
   MulterOptionsFactory,
 } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
-
 @Injectable()
 export class AwsService implements MulterOptionsFactory {
   constructor(private configService: ConfigService) {}
@@ -50,5 +49,9 @@ export class AwsService implements MulterOptionsFactory {
       new HttpException('Unsupported Extension', HttpStatus.NOT_ACCEPTABLE),
       false,
     );
+  }
+
+  deleteObject(Bucket: string, Key: string): Promise<S3.DeleteObjectOutput> {
+    return this.S3.deleteObject({ Bucket, Key }).promise();
   }
 }
