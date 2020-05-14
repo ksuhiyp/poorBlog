@@ -15,17 +15,23 @@ import slugify from 'slugify';
 import { IsOptional } from 'class-validator';
 import { PhotoEntity } from './photo.entity';
 import { TagEntity } from './tag.entity';
+import { UserRequestDTO } from 'src/models/user.model';
+import { Bool } from 'aws-sdk/clients/clouddirectory';
+import { Type } from 'class-transformer';
 
 @Entity('articles')
 export class ArticleEntity extends AbstractEntity {
   @Column()
   slug?: string;
+  @Column({ type: 'boolean', default: 'true' })
+  isDraft: boolean;
   @Column()
   title: string;
-  @Column()
-  body: string;
+  @Column({ nullable: true, default: null })
+  body?: string;
   @ManyToOne(type => UserEntity)
-  author: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'>;
+  @Type(() => UserEntity)
+  author: Partial<UserEntity>;
   @Column({ nullable: true })
   @IsOptional()
   description: string;
@@ -51,6 +57,9 @@ export class ArticleEntity extends AbstractEntity {
       slugify(this.title, { lower: true }) +
       '-' +
       ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
+  }
+  isArticleAuthor?(attempter: UserRequestDTO): Boolean {
+    return attempter.id === this.author.id;
   }
   toJson?() {
     const article = this;
