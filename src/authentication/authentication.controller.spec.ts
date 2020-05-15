@@ -28,9 +28,7 @@ describe('Authentication Controller', () => {
       .useValue({ login: () => access_token })
       .compile();
 
-    controller = moduleRef.get<AuthenticationController>(
-      AuthenticationController,
-    );
+    controller = moduleRef.get<AuthenticationController>(AuthenticationController);
 
     service = moduleRef.get<AuthenticationService>(AuthenticationService);
   });
@@ -61,22 +59,16 @@ describe('Authentication Controller', () => {
 
   describe('login', () => {
     it('should return access token', async () => {
-      const login = jest
-        .spyOn(service, 'login')
-        .mockImplementation(() => access_token);
+      const login = jest.spyOn(service, 'login').mockImplementation(() => access_token);
       const cookie = jest.spyOn(req.res, 'cookie');
       const result = await controller.login(req);
-      expect(cookie).toBeCalledWith(
-        'jwt',
-        service.login({ id: 1, username: 'suhaib' }),
-        {
-          maxAge: +process.env.COOKIE_MAX_AGE,
-          sameSite: 'strict',
-          secure: false,
-          httpOnly: true,
-          signed: true,
-        },
-      );
+      expect(cookie).toBeCalledWith('jwt', service.login({ id: 1, username: 'suhaib' }), {
+        maxAge: +process.env.COOKIE_MAX_AGE,
+        sameSite: 'strict',
+        secure: false,
+        httpOnly: true,
+        signed: true,
+      });
       expect(login).toBeCalledWith({ id: 1, username: 'suhaib' });
       expect(result).toBe(undefined);
     });

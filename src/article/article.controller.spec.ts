@@ -6,11 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
 import { Repository, DeleteResult, getRepository } from 'typeorm';
 import { NotFoundException } from '@nestjs/common';
-import {
-  GetArticlesQuery,
-  CreateArticleDTO,
-  UpdateArticleDTO,
-} from 'src/models/article.model';
+import { GetArticlesQuery, CreateArticleDTO, UpdateArticleDTO } from 'src/models/article.model';
 import { TagEntity } from '../entities/tag.entity';
 
 describe('Article Controller', () => {
@@ -93,18 +89,14 @@ describe('Article Controller', () => {
   describe('Get articles', () => {
     it('should be called one time and with get articles query', () => {
       const articles = jest.spyOn(controller, 'articles');
-      const getArticles = jest
-        .spyOn(service, 'getArticles')
-        .mockImplementation(() => Promise.resolve([mockAricle]));
+      const getArticles = jest.spyOn(service, 'getArticles').mockImplementation(() => Promise.resolve([mockAricle]));
       const result = controller.articles(getArticlesQuery);
       expect(articles).toBeCalledTimes(1);
       return expect(articles).toBeCalledWith(getArticlesQuery);
     });
     it('should call service->getArticles with query args one times ', () => {
       const articles = jest.spyOn(controller, 'articles');
-      const getArticles = jest
-        .spyOn(service, 'getArticles')
-        .mockImplementation(() => Promise.resolve([mockAricle]));
+      const getArticles = jest.spyOn(service, 'getArticles').mockImplementation(() => Promise.resolve([mockAricle]));
       const result = controller.articles(getArticlesQuery);
       expect(getArticles).toBeCalledTimes(2);
       expect(getArticles).toBeCalledWith(getArticlesQuery);
@@ -112,9 +104,7 @@ describe('Article Controller', () => {
 
     it('should return articles', () => {
       const articles = jest.spyOn(controller, 'articles');
-      const getArticles = jest
-        .spyOn(service, 'getArticles')
-        .mockImplementation(() => Promise.resolve([mockAricle]));
+      const getArticles = jest.spyOn(service, 'getArticles').mockImplementation(() => Promise.resolve([mockAricle]));
       const result = controller.articles(getArticlesQuery);
       return expect(result).resolves.toEqual([mockAricle]);
     });
@@ -122,16 +112,12 @@ describe('Article Controller', () => {
   describe('Post article', () => {
     it('should call service->createArticle once with args', () => {
       const articles = jest.spyOn(controller, 'createArticle');
-      const createArticle = jest
-        .spyOn(service, 'createArticle')
-        .mockImplementation(() => Promise.resolve(mockAricle));
+      const createArticle = jest.spyOn(service, 'createArticle').mockImplementation(() => Promise.resolve(mockAricle));
       const result = controller.createArticle(createArticleBody, user);
     });
     it('should return an article', () => {
       const articles = jest.spyOn(controller, 'createArticle');
-      const createArticle = jest
-        .spyOn(service, 'createArticle')
-        .mockImplementation(() => Promise.resolve(mockAricle));
+      const createArticle = jest.spyOn(service, 'createArticle').mockImplementation(() => Promise.resolve(mockAricle));
       const result = controller.createArticle(createArticleBody, user);
       return expect(result).resolves.toEqual(mockAricle);
     });
@@ -139,18 +125,14 @@ describe('Article Controller', () => {
   describe('Put article', () => {
     it('should call service->updateArtice with args', () => {
       const articles = jest.spyOn(controller, 'updateArticle');
-      const updateArticle = jest
-        .spyOn(service, 'updateArticle')
-        .mockImplementation(() => Promise.resolve(mockAricle));
+      const updateArticle = jest.spyOn(service, 'updateArticle').mockImplementation(() => Promise.resolve(mockAricle));
       const result = controller.updateArticle(createArticleBody, user, 1);
       expect(updateArticle).toBeCalledTimes(1);
       // expect(updateArticle).toBeCalledWith(updateArticleBody, user, 1);
     });
     it('should return article', () => {
       const articles = jest.spyOn(controller, 'updateArticle');
-      const updateArticle = jest
-        .spyOn(service, 'updateArticle')
-        .mockImplementation(() => Promise.resolve(mockAricle));
+      const updateArticle = jest.spyOn(service, 'updateArticle').mockImplementation(() => Promise.resolve(mockAricle));
       const result = controller.updateArticle(createArticleBody, user, 1);
       return expect(result).resolves.toEqual(mockAricle);
     });
@@ -158,22 +140,14 @@ describe('Article Controller', () => {
   describe('Delete article', () => {
     it('should call service->delete', () => {
       const articles = jest.spyOn(controller, 'updateArticle');
-      const deleteArticle = jest
-        .spyOn(service, 'deleteArticle')
-        .mockImplementation(() =>
-          Promise.resolve<DeleteResult>({ raw: '', affected: 1 }),
-        );
+      const deleteArticle = jest.spyOn(service, 'deleteArticle').mockImplementation(() => Promise.resolve<DeleteResult>({ raw: '', affected: 1 }));
       const result = controller.deleteArticle(1, user);
       expect(deleteArticle).toBeCalledTimes(1);
       expect(deleteArticle).toBeCalledWith(1, user);
     });
     it('should return deleteresult', () => {
       const articles = jest.spyOn(controller, 'updateArticle');
-      const deleteArticle = jest
-        .spyOn(service, 'deleteArticle')
-        .mockImplementation(() =>
-          Promise.resolve<DeleteResult>({ raw: '', affected: 1 }),
-        );
+      const deleteArticle = jest.spyOn(service, 'deleteArticle').mockImplementation(() => Promise.resolve<DeleteResult>({ raw: '', affected: 1 }));
       const result = controller.deleteArticle(1, user);
       return expect(result).resolves.toEqual({ raw: '', affected: 1 });
     });

@@ -1,12 +1,4 @@
-import {
-  IsOptional,
-  IsNumber,
-  IsString,
-  IsNotEmpty,
-  IsArray,
-  ValidateNested,
-  IsUrl,
-} from 'class-validator';
+import { IsOptional, IsNumber, IsString, IsNotEmpty, IsArray, ValidateNested, IsUrl } from 'class-validator';
 import { WhereExpression, OrderByCondition, Binary } from 'typeorm';
 import { UserResponseDTO } from './user.model';
 import { TagEntity } from 'src/entities/tag.entity';

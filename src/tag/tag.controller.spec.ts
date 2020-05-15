@@ -17,10 +17,7 @@ describe('Tag Controller', () => {
 
     const module: TestingModule = await Test.createTestingModule({
       controllers: [TagController],
-      providers: [
-        TagService,
-        { provide: getRepositoryToken(TagEntity), useClass: Repository },
-      ],
+      providers: [TagService, { provide: getRepositoryToken(TagEntity), useClass: Repository }],
     }).compile();
 
     controller = module.get<TagController>(TagController);
@@ -38,9 +35,7 @@ describe('Tag Controller', () => {
       expect(findAll).toBeCalled();
     });
     it('should return an array of tags', () => {
-      const findAll = jest
-        .spyOn(service, 'findAll')
-        .mockImplementation(() => Promise.resolve([mockTag]));
+      const findAll = jest.spyOn(service, 'findAll').mockImplementation(() => Promise.resolve([mockTag]));
       const result = controller.find();
       expect(result).resolves.toEqual([mockTag]);
     });

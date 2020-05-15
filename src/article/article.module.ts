@@ -13,12 +13,7 @@ import { ImageEntity } from 'src/entities/image.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([
-      ArticleEntity,
-      TagEntity,
-      PosterEntity,
-      ImageEntity,
-    ]),
+    TypeOrmModule.forFeature([ArticleEntity, TagEntity, PosterEntity, ImageEntity]),
     MulterModule.registerAsync({
       useClass: AwsService,
     }),

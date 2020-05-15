@@ -13,11 +13,7 @@ import {
   ConflictException,
 } from '@nestjs/common';
 import { UserService } from './user.service';
-import {
-  UserRegistrationDTO,
-  UserUpdateDTO,
-  UserResponseDTO,
-} from '../models/user.model';
+import { UserRegistrationDTO, UserUpdateDTO, UserResponseDTO } from '../models/user.model';
 import { UserEntity } from '../entities/user.entity';
 import { HashPasswordPipe } from '../common/pipes/hash-password.pipe';
 import { AuthGuard } from '@nestjs/passport';
@@ -55,10 +51,7 @@ export class UserController {
   }
   @UseGuards(AuthGuard('jwt'))
   @Put(':id')
-  async update(
-    @Body() updatedUser: UserUpdateDTO,
-    @Param('id') id: number,
-  ): Promise<UserUpdateDTO> {
+  async update(@Body() updatedUser: UserUpdateDTO, @Param('id') id: number): Promise<UserUpdateDTO> {
     const user = await this.userService.findOne(id);
     if (!user) {
       throw new BadRequestException(`User id:${id} not found`);

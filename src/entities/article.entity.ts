@@ -1,14 +1,4 @@
-import {
-  Entity,
-  Column,
-  ManyToOne,
-  BeforeInsert,
-  OneToMany,
-  OneToOne,
-  ManyToMany,
-  JoinTable,
-  JoinColumn,
-} from 'typeorm';
+import { Entity, Column, ManyToOne, BeforeInsert, OneToMany, OneToOne, ManyToMany, JoinTable, JoinColumn } from 'typeorm';
 import { AbstractEntity } from './abstract.entity';
 import { UserEntity } from './user.entity';
 import slugify from 'slugify';
@@ -71,10 +61,7 @@ export class ArticleEntity extends AbstractEntity {
 
   @BeforeInsert()
   titleToSlug?(): void {
-    this.slug =
-      slugify(this.title, { lower: true }) +
-      '-' +
-      ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
+    this.slug = slugify(this.title, { lower: true }) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 
   isArticleAuthor?(attempter: Partial<UserEntity>): Boolean {

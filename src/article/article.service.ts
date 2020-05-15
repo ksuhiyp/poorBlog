@@ -1,17 +1,8 @@
-import {
-  Injectable,
-  ForbiddenException,
-  Logger,
-  HttpStatus,
-} from '@nestjs/common';
+import { Injectable, ForbiddenException, Logger, HttpStatus } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
 import { Repository, DeleteResult } from 'typeorm';
-import {
-  GetArticleByIdOrSlugQuery,
-  GetArticlesQuery,
-  DeleteArticleImageDTO,
-} from 'src/models/article.model';
+import { GetArticleByIdOrSlugQuery, GetArticlesQuery, DeleteArticleImageDTO } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
 import { TagEntity } from '../entities/tag.entity';
 import { UserRequestDTO } from 'src/models/user.model';
@@ -41,10 +32,7 @@ export class ArticleService {
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
     return this.repo.find({ ...query, relations: ['author'] });
   }
-  async createArticle(
-    drafteArticle: ArticleEntity,
-    author: UserEntity,
-  ): Promise<ArticleEntity> {
+  async createArticle(drafteArticle: ArticleEntity, author: UserEntity): Promise<ArticleEntity> {
     const articleDraftEntity = this.repo.create(drafteArticle);
     articleDraftEntity.author = author;
     return this.repo.save(articleDraftEntity);
@@ -62,11 +50,7 @@ export class ArticleService {
     // const article = await this.repo.save(articleEntity);
     // return article;
   }
-  async updateArticle(
-    id: number,
-    newArticle: Partial<ArticleEntity>,
-    user: Partial<UserEntity>,
-  ): Promise<ArticleEntity> {
+  async updateArticle(id: number, newArticle: Partial<ArticleEntity>, user: Partial<UserEntity>): Promise<ArticleEntity> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
     });
@@ -84,9 +68,7 @@ export class ArticleService {
       relations: ['poster'],
     });
 
-    const posterEntity = this.posterRepo.create(
-      plainToClass(PosterEntity, poster),
-    );
+    const posterEntity = this.posterRepo.create(plainToClass(PosterEntity, poster));
 
     if (article.poster) {
       try {
@@ -100,10 +82,7 @@ export class ArticleService {
     return this.repo.save(article);
   }
 
-  async patchArticleImages(
-    articleId: number,
-    image: MulterS3File,
-  ): Promise<ArticleEntity> {
+  async patchArticleImages(articleId: number, image: MulterS3File): Promise<ArticleEntity> {
     const article = await this.repo.findOneOrFail(articleId);
     const imageEntity = this.imageRepo.create(image);
     article.images.push(imageEntity);
@@ -113,9 +92,7 @@ export class ArticleService {
     const article = await this.repo.findOneOrFail(articleId, {
       relations: ['images'],
     });
-    const imageToDelete = article.images.find(
-      image => image.location === body.location,
-    );
+    const imageToDelete = article.images.find(image => image.location === body.location);
 
     if (!imageToDelete) {
       return HttpStatus.NO_CONTENT;
@@ -127,58 +104,18 @@ export class ArticleService {
       id: imageToDelete.id,
     });
 
-    return ;
+    return;
   }
   async deleteArticle(id: number, user: UserRequestDTO): Promise<DeleteResult> {
     const article = await this.repo.findOneOrFail(id, {
       relations: ['author'],
     });
     if (!article.isArticleAuthor(user)) {
-      throw new ForbiddenException(
-        `User ${user.username} doesn\'t own article ${article.slug}`,
-      );
+      throw new ForbiddenException(`User ${user.username} doesn\'t own article ${article.slug}`);
     }
     return this.repo.delete(id);
   }
 
-  // private async initArticleEntity(
-  //   data: Partial<CreateArticleDTO>,
-  //   author: UserRequestDTO,
-  //   files: ArticlePhotosMulterS3Files,
-  // ): Promise<ArticleEntity> {
-  //   const articleEntity = new ArticleEntity();
-  //   articleEntity.title = data.title;
-  //   articleEntity.body = data.body;
-  //   articleEntity.description = data.description;
-  //   articleEntity.author = author;
-
-  //   return articleEntity;
-  // }
-
-  // private initArticlePhotos(
-  //   files: ArticlePhotosMulterS3Files,
-  //   articleEntity: ArticleEntity,
-  // ): PhotoEntity[] {
-  //   const poster = files['poster']?.pop() as MulterS3File;
-  //   const pictures: MulterS3File[] = files['pictures']?.map(
-  //     file => file as MulterS3File,
-  //   );
-  //   articleEntity.photos = [];
-  //   if (poster) {
-  //     const photoEntity = this.photoRepo.create(poster);
-  //     photoEntity.type = 'poster';
-  //     articleEntity.photos.push(photoEntity);
-  //   }
-  //   if (pictures?.length) {
-  //     const photoEntities = pictures.map(photo => {
-  //       const photoEntity = this.photoRepo.create(photo);
-  //       photoEntity.type = 'picture';
-  //       return photoEntity;
-  //     });
-  //     articleEntity.photos.push(...photoEntities);
-  //   }
-  //   return articleEntity.photos;
-  // }
   private initTaglistEntities(tags: TagEntity[]) {
     return Promise.all(
       tags.map(async tag => {

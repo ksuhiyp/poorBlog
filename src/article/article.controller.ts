@@ -13,22 +13,12 @@ import {
   HttpStatus,
   Req,
   UploadedFile,
-  UploadedFiles,
   Patch,
 } from '@nestjs/common';
-import {
-  FileInterceptor,
-  FilesInterceptor,
-  FileFieldsInterceptor,
-} from '@nestjs/platform-express';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { ArticleService } from './article.service';
 import { ArticleEntity } from '../entities/article.entity';
-import {
-  GetArticlesQuery,
-  CreateArticleDTO,
-  UpdateArticleDTO,
-  DeleteArticleImageDTO,
-} from '../models/article.model';
+import { GetArticlesQuery, UpdateArticleDTO, DeleteArticleImageDTO } from '../models/article.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
 import { UserEntity } from '../entities/user.entity';
@@ -59,10 +49,7 @@ export class ArticleController {
   }
   @Post()
   @UseGuards(AuthGuard('jwt'))
-  async createArticle(
-    @Body() body: ArticleEntity,
-    @UserParam() Author: UserEntity,
-  ): Promise<ArticleEntity> {
+  async createArticle(@Body() body: ArticleEntity, @UserParam() Author: UserEntity): Promise<ArticleEntity> {
     return this.articleService.createArticle(body, Author);
   }
 
@@ -80,36 +67,23 @@ export class ArticleController {
   @Patch(':id/image')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
-  async patchArticleImages(
-    @Param('id') articleId: number,
-    @UploadedFile() image: MulterS3File,
-  ) {
+  async patchArticleImages(@Param('id') articleId: number, @UploadedFile() image: MulterS3File) {
     return this.articleService.patchArticleImages(articleId, image);
   }
 
   @Delete(':id/image')
   @UseGuards(AuthGuard('jwt'))
-  async deleteArticleImage(
-    @Param('id') articleId: number,
-    @Body() body: DeleteArticleImageDTO,
-  ) {
+  async deleteArticleImage(@Param('id') articleId: number, @Body() body: DeleteArticleImageDTO) {
     return this.articleService.deleteArticleImage(articleId, body);
   }
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
-  async updateArticle(
-    @Body() body: UpdateArticleDTO,
-    @UserParam() user: Partial<UserEntity>,
-    @Param('id') id: number,
-  ) {
+  async updateArticle(@Body() body: UpdateArticleDTO, @UserParam() user: Partial<UserEntity>, @Param('id') id: number) {
     return this.articleService.updateArticle(id, body, user);
   }
   @Delete(':id')
   @UseGuards(AuthGuard('jwt'))
-  async deleteArticle(
-    @Param('id') id: number,
-    @UserParam() user: UserRequestDTO,
-  ) {
+  async deleteArticle(@Param('id') id: number, @UserParam() user: UserRequestDTO) {
     return await this.articleService.deleteArticle(id, user);
   }
 }

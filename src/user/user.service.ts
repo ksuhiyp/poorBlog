@@ -1,9 +1,4 @@
-import {
-  Injectable,
-  HttpException,
-  InternalServerErrorException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, HttpException, InternalServerErrorException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { UserEntity } from '../entities/user.entity';
 import { Repository, InsertResult, DeleteResult, UpdateResult } from 'typeorm';
@@ -11,9 +6,7 @@ import { UserRegistrationDTO, UserUpdateDTO } from 'src/models/user.model';
 import { Observable } from 'rxjs';
 @Injectable()
 export class UserService {
-  constructor(
-    @InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>,
-  ) {}
+  constructor(@InjectRepository(UserEntity) private readonly userRepository: Repository<UserEntity>) {}
 
   findByUsername(username: string): Promise<UserEntity> {
     return this.userRepository.findOne({ where: { username } });

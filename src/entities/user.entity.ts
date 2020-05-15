@@ -1,10 +1,4 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Unique,
-  OneToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, Unique, OneToMany } from 'typeorm';
 import { IsUrl, IsOptional } from 'class-validator';
 import { AbstractEntity } from './abstract.entity';
 import { Exclude, classToPlain } from 'class-transformer';

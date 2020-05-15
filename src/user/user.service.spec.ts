@@ -42,10 +42,7 @@ describe('UserService', () => {
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ isGlobal: true })],
-      providers: [
-        UserService,
-        { provide: getRepositoryToken(UserEntity), useValue: mockRepository },
-      ],
+      providers: [UserService, { provide: getRepositoryToken(UserEntity), useValue: mockRepository }],
     }).compile();
 
     service = module.get<UserService>(UserService);
@@ -95,9 +92,7 @@ describe('UserService', () => {
 
   describe('Create', () => {
     it('should Create user entity', () => {
-      const create = jest
-        .spyOn(repo, 'create')
-        .mockImplementation(() => userEntity);
+      const create = jest.spyOn(repo, 'create').mockImplementation(() => userEntity);
       expect(repo.create(userReg)).toEqual(userEntity);
     });
     it('should return inserted result', () => {
@@ -120,31 +115,19 @@ describe('UserService', () => {
 
   describe('update', () => {
     it('should be called with id and user object', () => {
-      jest
-        .spyOn(repo, 'update')
-        .mockImplementation(() =>
-          Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }),
-        );
+      jest.spyOn(repo, 'update').mockImplementation(() => Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }));
       jest.spyOn(service, 'update');
       const result = service.update(1, user);
       expect(service.update).toBeCalledWith(1, user);
     });
     it('should call repo update with {id} and user obj', () => {
-      jest
-        .spyOn(repo, 'update')
-        .mockImplementation(() =>
-          Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }),
-        );
+      jest.spyOn(repo, 'update').mockImplementation(() => Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }));
       jest.spyOn(service, 'update');
       const result = service.update(1, user);
       expect(repo.update).toBeCalledWith({ id: 1 }, user);
     });
     it('should return an update result', () => {
-      jest
-        .spyOn(repo, 'update')
-        .mockImplementation(() =>
-          Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }),
-        );
+      jest.spyOn(repo, 'update').mockImplementation(() => Promise.resolve<UpdateResult>({ raw: 1, generatedMaps: [{}] }));
       jest.spyOn(service, 'update');
       const result = service.update(1, user);
       return expect(result).resolves.toEqual({ raw: 1, generatedMaps: [{}] });

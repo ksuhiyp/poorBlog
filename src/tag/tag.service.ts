@@ -6,9 +6,7 @@ import { Repository, Like } from 'typeorm';
 
 @Injectable()
 export class TagService {
-  constructor(
-    @InjectRepository(TagEntity) private tagRepo: Repository<TagEntity>,
-  ) {}
+  constructor(@InjectRepository(TagEntity) private tagRepo: Repository<TagEntity>) {}
 
   findAll(query?: findAllQuery): Promise<TagEntity[]> {
     let condition;

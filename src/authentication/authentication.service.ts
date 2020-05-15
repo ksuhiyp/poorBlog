@@ -2,18 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import {
-  UserLoginDTO,
-  UserResponseDTO,
-  Credentials,
-} from 'src/models/user.model';
+import { UserLoginDTO, UserResponseDTO, Credentials } from 'src/models/user.model';
 import { UserEntity } from 'src/entities/user.entity';
 @Injectable()
 export class AuthenticationService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {}
+  constructor(private readonly userService: UserService, private readonly jwtService: JwtService) {}
 
   async validateUser(username: string, password: string) {
     const user = await this.userService.findByUsername(username);

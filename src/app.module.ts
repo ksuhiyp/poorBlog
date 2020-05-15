@@ -11,15 +11,7 @@ import { ArticleModule } from './article/article.module';
 import { TagModule } from './tag/tag.module';
 import { CommonModule } from './common/common.module';
 @Module({
-  imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
-    UserModule,
-    DatabaseModule,
-    ArticleModule,
-    AuthenticationModule,
-    TagModule,
-    CommonModule,
-  ],
+  imports: [ConfigModule.forRoot({ isGlobal: true }), UserModule, DatabaseModule, ArticleModule, AuthenticationModule, TagModule, CommonModule],
   controllers: [AppController],
   providers: [
     AppService,

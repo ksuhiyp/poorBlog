@@ -1,3 +1,3 @@
 export const constatns = {
-    bucket:'poor-blog'
+  bucket: 'poor-blog',
 };

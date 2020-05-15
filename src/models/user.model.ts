@@ -1,12 +1,4 @@
-import {
-  IsString,
-  MinLength,
-  MaxLength,
-  IsNotEmpty,
-  IsLowercase,
-  IsOptional,
-  IsUrl,
-} from 'class-validator';
+import { IsString, MinLength, MaxLength, IsNotEmpty, IsLowercase, IsOptional, IsUrl } from 'class-validator';
 
 export class UserRegistrationDTO {
   @IsString()
