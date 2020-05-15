@@ -1,23 +1,19 @@
-import { Injectable, ForbiddenException, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  ForbiddenException,
+  Logger,
+  HttpStatus,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { ArticleEntity } from '../entities/article.entity';
-import {
-  Repository,
-  UpdateResult,
-  DeleteResult,
-  InsertResult,
-  ConnectionManager,
-  getConnection,
-} from 'typeorm';
+import { Repository, DeleteResult } from 'typeorm';
 import {
   GetArticleByIdOrSlugQuery,
   GetArticlesQuery,
-  UpdateArticleDTO,
-  CreateArticleDTO,
+  DeleteArticleImageDTO,
 } from 'src/models/article.model';
 import { UserEntity } from 'src/entities/user.entity';
 import { TagEntity } from '../entities/tag.entity';
-import { PhotoEntity } from 'src/entities/photo.entity';
 import { UserRequestDTO } from 'src/models/user.model';
 import { PosterEntity } from 'src/entities/poster.entity';
 import { plainToClass } from 'class-transformer';
@@ -112,6 +108,26 @@ export class ArticleService {
     const imageEntity = this.imageRepo.create(image);
     article.images.push(imageEntity);
     return this.repo.save(article);
+  }
+  async deleteArticleImage(articleId: number, body: DeleteArticleImageDTO) {
+    const article = await this.repo.findOneOrFail(articleId, {
+      relations: ['images'],
+    });
+    const imageToDelete = article.images.find(
+      image => image.location === body.location,
+    );
+
+    if (!imageToDelete) {
+      return HttpStatus.NO_CONTENT;
+    }
+
+    await this.aws.deleteObject(imageToDelete.bucket, imageToDelete.key);
+
+    await this.imageRepo.delete({
+      id: imageToDelete.id,
+    });
+
+    return ;
   }
   async deleteArticle(id: number, user: UserRequestDTO): Promise<DeleteResult> {
     const article = await this.repo.findOneOrFail(id, {

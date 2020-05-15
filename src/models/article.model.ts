@@ -5,6 +5,7 @@ import {
   IsNotEmpty,
   IsArray,
   ValidateNested,
+  IsUrl,
 } from 'class-validator';
 import { WhereExpression, OrderByCondition, Binary } from 'typeorm';
 import { UserResponseDTO } from './user.model';
@@ -14,6 +15,7 @@ import { TagDTO } from './tag.model';
 import { Type } from 'class-transformer';
 import { UserEntity } from 'src/entities/user.entity';
 import { Username } from 'aws-sdk/clients/appstream';
+import { Url } from 'aws-sdk/clients/cloudformation';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -87,4 +89,9 @@ export class articleResponseDTO {
   description?: string;
   author?: UserResponseDTO;
   tagList?: string[];
+}
+
+export class DeleteArticleImageDTO {
+  @IsUrl()
+  location: string;
 }

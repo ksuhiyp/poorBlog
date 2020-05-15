@@ -55,4 +55,6 @@ export class AwsService implements MulterOptionsFactory {
   deleteObject(Bucket: string, Key: string): Promise<S3.DeleteObjectOutput> {
     return this.S3.deleteObject({ Bucket, Key }).promise();
   }
+
+
 }

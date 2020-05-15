@@ -27,6 +27,7 @@ import {
   GetArticlesQuery,
   CreateArticleDTO,
   UpdateArticleDTO,
+  DeleteArticleImageDTO,
 } from '../models/article.model';
 import { AuthGuard } from '@nestjs/passport';
 import { UserParam } from '../common/decorators/user.decorator';
@@ -76,7 +77,7 @@ export class ArticleController {
     return this.articleService.patchArticlePoster(id, poster);
   }
 
-  @Patch(':id/images')
+  @Patch(':id/image')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
   async patchArticleImages(
@@ -86,7 +87,14 @@ export class ArticleController {
     return this.articleService.patchArticleImages(articleId, image);
   }
 
-  
+  @Delete(':id/image')
+  @UseGuards(AuthGuard('jwt'))
+  async deleteArticleImage(
+    @Param('id') articleId: number,
+    @Body() body: DeleteArticleImageDTO,
+  ) {
+    return this.articleService.deleteArticleImage(articleId, body);
+  }
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
