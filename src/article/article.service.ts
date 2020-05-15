@@ -22,6 +22,7 @@ import { UserRequestDTO } from 'src/models/user.model';
 import { PosterEntity } from 'src/entities/poster.entity';
 import { plainToClass } from 'class-transformer';
 import { AwsService } from 'src/common/services/aws.service';
+import { ImageEntity } from 'src/entities/image.entity';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -29,6 +30,8 @@ export class ArticleService {
     @InjectRepository(TagEntity) private tagRepo: Repository<TagEntity>,
     @InjectRepository(PosterEntity)
     private posterRepo: Repository<PosterEntity>,
+    @InjectRepository(ImageEntity)
+    private imageRepo: Repository<ImageEntity>,
     private aws: AwsService,
   ) {}
   getArticle(query?: GetArticleByIdOrSlugQuery): Promise<ArticleEntity> {
@@ -81,7 +84,7 @@ export class ArticleService {
   }
 
   async patchArticlePoster(articleId: number, poster: MulterS3File) {
-    const article = await this.repo.findOne(articleId, {
+    const article = await this.repo.findOneOrFail(articleId, {
       relations: ['poster'],
     });
 
@@ -98,6 +101,16 @@ export class ArticleService {
     }
     article.poster = posterEntity;
 
+    return this.repo.save(article);
+  }
+
+  async patchArticleImages(
+    articleId: number,
+    image: MulterS3File,
+  ): Promise<ArticleEntity> {
+    const article = await this.repo.findOneOrFail(articleId);
+    const imageEntity = this.imageRepo.create(image);
+    article.images.push(imageEntity);
     return this.repo.save(article);
   }
   async deleteArticle(id: number, user: UserRequestDTO): Promise<DeleteResult> {

@@ -14,6 +14,7 @@ import {
   Req,
   UploadedFile,
   UploadedFiles,
+  Patch,
 } from '@nestjs/common';
 import {
   FileInterceptor,
@@ -64,7 +65,7 @@ export class ArticleController {
     return this.articleService.createArticle(body, Author);
   }
 
-  @Put(':id/poster')
+  @Patch(':id/poster')
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('poster'))
   async patchArticlePoster(
@@ -75,6 +76,17 @@ export class ArticleController {
     return this.articleService.patchArticlePoster(id, poster);
   }
 
+  @Patch(':id/images')
+  @UseGuards(AuthGuard('jwt'))
+  @UseInterceptors(FileInterceptor('image'))
+  async patchArticleImages(
+    @Param('id') articleId: number,
+    @UploadedFile() image: MulterS3File,
+  ) {
+    return this.articleService.patchArticleImages(articleId, image);
+  }
+
+  
   @Put(':id')
   @UseGuards(AuthGuard('jwt'))
   async updateArticle(
