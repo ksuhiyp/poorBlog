@@ -36,19 +36,7 @@ export class ArticleService {
     const articleDraftEntity = this.repo.create(drafteArticle);
     articleDraftEntity.author = author;
     return this.repo.save(articleDraftEntity);
-    // const articleEntity = await this.initArticleEntity(data, author, files);
-    // articleEntity.photos = this.initArticlePhotos(files, articleEntity);
-    // articleEntity.tagList = await this.initTaglistEntities(data);
-
-    // await this.tagRepo
-    //   .createQueryBuilder()
-    //   .insert()
-    //   .into(TagEntity)
-    //   .values(articleEntity.tagList)
-    //   .orIgnore()
-    //   .execute();
-    // const article = await this.repo.save(articleEntity);
-    // return article;
+    
   }
   async updateArticle(id: number, newArticle: Partial<ArticleEntity>, user: Partial<UserEntity>): Promise<ArticleEntity> {
     const article = await this.repo.findOneOrFail(id, {
