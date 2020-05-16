@@ -22,11 +22,9 @@ export class ArticleService {
     private imageRepo: Repository<ImageEntity>,
     private aws: AwsService,
   ) {}
-  getArticle(query?: GetArticleByIdOrSlugQuery): Promise<ArticleEntity> {
+  getArticle(slugOrId?: string | number): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
-      where: {
-        ...query,
-      },
+      where: [{ id: isNaN(parseInt(slugOrId.toString())) ? undefined : slugOrId }, { slug: slugOrId }],
       relations: ['author'],
     });
   }

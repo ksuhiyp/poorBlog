@@ -28,11 +28,11 @@ import { UserRequestDTO } from 'src/models/user.model';
 @Controller('article')
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
-  @Get(':slug')
-  async article(@Param('slug') slug: string): Promise<ArticleEntity> {
-    const article = await this.articleService.getArticle({ slug });
+  @Get(':slugOrId')
+  async article(@Param('slugOrId') slugOrId: string | number): Promise<ArticleEntity> {
+    const article = await this.articleService.getArticle(slugOrId);
     if (!article) {
-      throw new NotFoundException(`No Article with id ${slug}`);
+      throw new NotFoundException(`No Article with id ${slugOrId}`);
     }
     return article.toJson();
   }
