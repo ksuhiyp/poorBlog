@@ -16,7 +16,7 @@
               "upload"
             ],
             
-            "cwd": "${workspaceFolder}/src"
+            "cwd": "${workspaceFolder}/src","preLaunchTask": "npm: start:debug"
           }
     ]
 }
