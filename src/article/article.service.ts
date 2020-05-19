@@ -25,7 +25,7 @@ export class ArticleService {
   getArticle(slugOrId?: string | number): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
       where: [{ id: isNaN(parseInt(slugOrId.toString())) ? undefined : slugOrId }, { slug: slugOrId }],
-      relations: ['author', 'tags'],
+      relations: ['author', 'tags', 'poster'],
     });
   }
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
@@ -58,9 +58,8 @@ export class ArticleService {
 
     if (article.poster) {
       await this.aws.deleteObject(article.poster.bucket, article.poster.key);
+      await this.posterRepo.delete(article.poster.id);
     }
-
-    await this.posterRepo.delete(article.poster.id);
 
     article.poster = posterEntity;
     return this.repo.save(article);
