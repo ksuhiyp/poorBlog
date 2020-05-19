@@ -2,12 +2,8 @@ import { IsOptional, IsNumber, IsString, IsNotEmpty, IsArray, ValidateNested, Is
 import { WhereExpression, OrderByCondition, Binary } from 'typeorm';
 import { UserResponseDTO } from './user.model';
 import { TagEntity } from 'src/entities/tag.entity';
-import { Tag } from 'aws-sdk/clients/swf';
-import { TagDTO } from './tag.model';
 import { Type } from 'class-transformer';
 import { UserEntity } from 'src/entities/user.entity';
-import { Username } from 'aws-sdk/clients/appstream';
-import { Url } from 'aws-sdk/clients/cloudformation';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
