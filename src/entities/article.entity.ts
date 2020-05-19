@@ -54,7 +54,7 @@ export class ArticleEntity extends AbstractEntity {
   @OneToOne(
     () => PosterEntity,
     poster => poster.article,
-    { cascade: true },
+    { cascade: true, onDelete: 'CASCADE' },
   )
   @JoinColumn()
   poster: PosterEntity;
