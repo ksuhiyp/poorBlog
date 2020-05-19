@@ -25,7 +25,7 @@ export class ArticleService {
   getArticle(slugOrId?: string | number): Promise<ArticleEntity> {
     return this.repo.findOneOrFail({
       where: [{ id: isNaN(parseInt(slugOrId.toString())) ? undefined : slugOrId }, { slug: slugOrId }],
-      relations: ['author'],
+      relations: ['author', 'tags'],
     });
   }
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {

@@ -10,7 +10,7 @@ export class TagService {
 
   findAll(query?: findAllQuery): Promise<TagEntity[]> {
     let condition;
-    if (query) {
+    if (query.title) {
       condition = { title: Like(`%${query?.title}%`) };
     }
     return this.tagRepo.find(condition);
