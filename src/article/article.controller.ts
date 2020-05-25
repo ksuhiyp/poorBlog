@@ -68,7 +68,8 @@ export class ArticleController {
   @UseGuards(AuthGuard('jwt'))
   @UseInterceptors(FileInterceptor('image'))
   async patchArticleImages(@Param('id') articleId: number, @UploadedFile() image: MulterS3File) {
-    return this.articleService.patchArticleImages(articleId, image);
+    const imageData = await this.articleService.patchArticleImages(articleId, image);
+    return { url: imageData.location };
   }
 
   @Delete(':id/image')

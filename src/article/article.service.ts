@@ -65,11 +65,12 @@ export class ArticleService {
     return this.repo.save(article);
   }
 
-  async patchArticleImages(articleId: number, image: MulterS3File): Promise<ArticleEntity> {
+  async patchArticleImages(articleId: number, image: MulterS3File): Promise<MulterS3File> {
     const article = await this.repo.findOneOrFail(articleId);
     const imageEntity = this.imageRepo.create(image);
     article.images.push(imageEntity);
-    return this.repo.save(article);
+    await this.repo.save(article);
+    return image;
   }
 
   async deleteArticleImage(articleId: number, body: DeleteArticleImageDTO) {
