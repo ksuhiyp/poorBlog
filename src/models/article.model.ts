@@ -4,6 +4,9 @@ import { UserResponseDTO } from './user.model';
 import { TagEntity } from 'src/entities/tag.entity';
 import { Type } from 'class-transformer';
 import { UserEntity } from 'src/entities/user.entity';
+import { ImageEntity } from 'src/entities/image.entity';
+import { isArray } from 'util';
+import { type } from 'os';
 
 export class GetArticleByIdOrSlugQuery {
   @IsOptional()
@@ -67,8 +70,8 @@ export class UpdateArticleDTO {
   description?: string;
 }
 
-export class articleResponseDTO {
-  id?: Number;
+export class ArticleResponseDTO {
+  id?: number;
   createdAt?: Date;
   updatedAt?: Date;
   slug?: string;
@@ -80,6 +83,7 @@ export class articleResponseDTO {
 }
 
 export class DeleteArticleImageDTO {
-  @IsUrl()
-  location: string;
+  @IsArray()
+  @Type(() => ImageEntity)
+  imagesToDelete: ImageEntity[];
 }

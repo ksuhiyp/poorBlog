@@ -72,7 +72,7 @@ export class ArticleController {
     return { url: imageData.location };
   }
 
-  @Delete(':id/image')
+  @Delete(':id/images')
   @UseGuards(AuthGuard('jwt'))
   async deleteArticleImage(@Param('id') articleId: number, @Body() body: DeleteArticleImageDTO) {
     return this.articleService.deleteArticleImage(articleId, body);

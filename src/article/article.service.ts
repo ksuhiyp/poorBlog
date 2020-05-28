@@ -10,6 +10,8 @@ import { PosterEntity } from 'src/entities/poster.entity';
 import { plainToClass } from 'class-transformer';
 import { AwsService } from 'src/common/services/aws.service';
 import { ImageEntity } from 'src/entities/image.entity';
+import { constants } from 'buffer';
+import { constatns } from 'src/common/constants';
 @Injectable()
 export class ArticleService {
   constructor(
@@ -57,7 +59,7 @@ export class ArticleService {
     const posterEntity = this.posterRepo.create(plainToClass(PosterEntity, poster));
 
     if (article.poster) {
-      await this.aws.deleteObject(article.poster.bucket, article.poster.key);
+      await this.aws.deleteObject(constatns.bucket, article.poster.key);
       await this.posterRepo.delete(article.poster.id);
     }
 
@@ -74,22 +76,9 @@ export class ArticleService {
   }
 
   async deleteArticleImage(articleId: number, body: DeleteArticleImageDTO) {
-    const article = await this.repo.findOneOrFail(articleId, {
-      relations: ['images'],
-    });
-    const imageToDelete = article.images.find(image => image.location === body.location);
-
-    if (!imageToDelete) {
-      return HttpStatus.NO_CONTENT;
-    }
-
-    await this.aws.deleteObject(imageToDelete.bucket, imageToDelete.key);
-
-    await this.imageRepo.delete({
-      id: imageToDelete.id,
-    });
-
-    return;
+    const imagesToDelete = body.imagesToDelete;
+    await this.imageRepo.delete(imagesToDelete.map(image => image.id));
+    return this.repo.findOne(articleId);
   }
 
   async deleteArticle(id: number, user: UserRequestDTO): Promise<DeleteResult> {
