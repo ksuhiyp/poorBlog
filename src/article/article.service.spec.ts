@@ -10,7 +10,7 @@ import { TagEntity } from '../entities/tag.entity';
 describe('ArticleService', () => {
   let service: ArticleService;
   let repo: Repository<ArticleEntity>;
-  let mockAuthor: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAT'> = {
+  const mockAuthor: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAT'> = {
     id: 1,
     username: 'test',
     bio: null,
@@ -18,7 +18,7 @@ describe('ArticleService', () => {
     photo: null,
     toJson: (() => this).bind(this),
   };
-  let mockArticle: CreateArticle = {
+  const mockArticle: CreateArticle = {
     author: mockAuthor,
     createdAt: new Date(process.env.MOCK_DATE),
     body: 'test',

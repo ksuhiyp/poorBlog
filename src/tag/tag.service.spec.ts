@@ -6,7 +6,7 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 
 describe('TagService', () => {
   let service: TagService;
-  let mockTag: TagEntity = new TagEntity();
+  const mockTag: TagEntity = new TagEntity();
   beforeAll(async () => {
     mockTag.title = 'test';
     mockTag.id = 1;

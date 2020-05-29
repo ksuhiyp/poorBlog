@@ -9,14 +9,14 @@ import { ConfigModule } from '@nestjs/config';
 
 describe('UserService', () => {
   let service: UserService;
-  let user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'> = {
+  const user: Omit<UserEntity, 'password' | 'createdAt' | 'updatedAt'> = {
     username: 'test',
     id: 1,
     articles: [],
     bio: null,
     photo: null,
   };
-  let userRes: UserResponseDTO = {
+  const userRes: UserResponseDTO = {
     id: 1,
     username: 'test',
     updatedAt: new Date('2020-04-09T11:18:10.694Z'),
@@ -25,7 +25,7 @@ describe('UserService', () => {
     bio: null,
     articles: [],
   };
-  let userEntity: UserEntity = {
+  const userEntity: UserEntity = {
     id: 1,
     username: 'test',
     updatedAt: new Date(process.env.MOCK_DATE),
@@ -36,9 +36,9 @@ describe('UserService', () => {
     password: 'test',
     toJson: () => user,
   };
-  let userReg: UserRegistrationDTO = { username: 'test', password: 'test' };
+  const userReg: UserRegistrationDTO = { username: 'test', password: 'test' };
   let repo: Repository<UserEntity>;
-  let mockRepository: Repository<UserEntity> = new MockUserRepository();
+  const mockRepository: Repository<UserEntity> = new MockUserRepository();
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [ConfigModule.forRoot({ isGlobal: true })],

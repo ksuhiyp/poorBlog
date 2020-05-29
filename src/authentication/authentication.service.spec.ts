@@ -14,16 +14,16 @@ describe('AuthenticationService', () => {
   let repo: Repository<UserEntity>;
   let hash: string;
   let user;
-  let access_token = 'test';
+  const access_token = 'test';
   const cookieExtractor = req => {
     return 'test';
   };
-  let JwtModuleOptions = {
+  const JwtModuleOptions = {
     jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
     ignoreExpiration: false,
     secretOrKey: 'test',
   };
-  let bcrypt = { compareSync: (pass: string, hash: string) => true };
+  const bcrypt = { compareSync: (pass: string, hash: string) => true };
   beforeEach(async () => {
     user = [{ username: 'test', password: 'test' }];
     hash = 'test';

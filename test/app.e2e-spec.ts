@@ -8,7 +8,7 @@ import cookieParser from 'cookie-parser';
 
 describe('AppController (e2e)', () => {
   let app: INestApplication;
-  let mockUser: UserRequestDTO = { username: 'suhayb', id: 3, bio: 'star' };
+  const mockUser: UserRequestDTO = { username: 'suhayb', id: 3, bio: 'star' };
   let cookie: string[];
   beforeAll(async done => {
     const moduleFixture: TestingModule = await Test.createTestingModule({

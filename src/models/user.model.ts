@@ -55,7 +55,7 @@ export interface UserResponseDTO {
   readonly username: string;
   readonly bio?: string;
   readonly photo?: string;
-  readonly articles?: Number[];
+  readonly articles?: number[];
   readonly createdAt?: Date;
   readonly updatedAt?: Date;
 }

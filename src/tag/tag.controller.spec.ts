@@ -8,7 +8,7 @@ import { TagService } from './tag.service';
 describe('Tag Controller', () => {
   let controller: TagController;
   let service: TagService;
-  let mockTag: TagEntity = new TagEntity();
+  const mockTag: TagEntity = new TagEntity();
 
   beforeEach(async () => {
     mockTag.title = 'test';

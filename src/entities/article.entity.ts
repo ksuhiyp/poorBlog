@@ -22,7 +22,7 @@ export class ArticleEntity extends AbstractEntity {
   @Column({ nullable: true, default: null })
   body?: string;
 
-  @ManyToOne(type => UserEntity)
+  @ManyToOne(() => UserEntity)
   @Type(() => UserEntity)
   author: Partial<UserEntity>;
 
@@ -42,7 +42,7 @@ export class ArticleEntity extends AbstractEntity {
   tags: TagEntity[];
 
   @OneToMany(
-    type => ImageEntity,
+    () => ImageEntity,
     image => image.article,
     { cascade: true, eager: true },
   )

@@ -40,7 +40,7 @@ describe('User Controller', () => {
 
   describe('Get all users', () => {
     it('should return array of Users', async () => {
-      let result = [];
+      const result = [];
       jest.spyOn(service, 'findAll').mockImplementation(() => Promise.resolve(result));
       return expect(controller.getAll()).resolves.toEqual(result);
     });

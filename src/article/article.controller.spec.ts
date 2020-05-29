@@ -12,28 +12,28 @@ import { TagEntity } from '../entities/tag.entity';
 describe('Article Controller', () => {
   let controller: ArticleController;
   let service: ArticleService;
-  let mockAricle: any = {
+  const mockAricle: any = {
     author: 1,
     title: 'test',
     description: 'test',
     body: 'test',
     toJson: (() => this).bind(this),
   };
-  let getArticlesQuery: GetArticlesQuery = {
+  const getArticlesQuery: GetArticlesQuery = {
     order: undefined,
     skip: undefined,
     take: undefined,
     where: undefined,
   };
-  let createArticleBody: CreateArticleDTO = {
+  const createArticleBody: CreateArticleDTO = {
     body: 'test',
     description: 'test',
     title: 'test',
   };
-  let updateArticleBody: UpdateArticleDTO = {
+  const updateArticleBody: UpdateArticleDTO = {
     body: 'test',
   };
-  let user: any = { username: 'suhayb', id: 1 };
+  const user: any = { username: 'suhayb', id: 1 };
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
       controllers: [ArticleController],

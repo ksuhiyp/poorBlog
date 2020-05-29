@@ -7,15 +7,15 @@ import { UserEntity } from '../entities/user.entity';
 describe('Authentication Controller', () => {
   let controller: AuthenticationController;
   let service: AuthenticationService;
-  let user = new UserEntity({
+  const user = new UserEntity({
     id: 1,
     bio: 'test',
     username: 'suhayb',
     password: 'test',
   });
-  let req = { res: { cookie: (cookieName, payload, options) => null, user } };
+  const req = { res: { cookie: (cookieName, payload, options) => null, user } };
 
-  let access_token = 'test';
+  const access_token = 'test';
   let app: INestApplication;
   beforeEach(async () => {
     const moduleRef = await Test.createTestingModule({
