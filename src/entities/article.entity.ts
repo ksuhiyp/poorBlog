@@ -51,7 +51,7 @@ export class ArticleEntity extends AbstractEntity {
   @OneToOne(
     () => PosterEntity,
     poster => poster.article,
-    { cascade: true, onDelete: 'CASCADE' },
+    { cascade: true, onDelete: 'SET NULL' },
   )
   @JoinColumn()
   poster: PosterEntity;
@@ -61,13 +61,12 @@ export class ArticleEntity extends AbstractEntity {
     this.slug = slugify(this.title, { lower: true }) + '-' + ((Math.random() * Math.pow(36, 6)) | 0).toString(36);
   }
 
-  isArticleAuthor?(attempter: Partial<UserEntity>): Boolean {
+  isArticleAuthor?(attempter: Partial<UserEntity>): boolean {
     return attempter.id === this.author.id;
   }
 
   toJson?() {
-    const article = this;
-    article.author = article.author.toJson();
-    return article;
+    this.author = this.author.toJson();
+    return this;
   }
 }
