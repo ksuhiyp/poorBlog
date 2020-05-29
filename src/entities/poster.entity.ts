@@ -6,7 +6,8 @@ import { ArticleEntity } from './article.entity';
 export class PosterEntity extends PhotoEntity {
   @OneToOne(
     () => ArticleEntity,
-    article => article.poster,{onDelete:'CASCADE'}
+    article => article.poster,
+    { onDelete: 'SET NULL' },
   )
   article: ArticleEntity;
 }
