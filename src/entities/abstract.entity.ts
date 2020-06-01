@@ -6,11 +6,9 @@ import { Exclude } from 'class-transformer';
 export abstract class AbstractEntity {
   @PrimaryGeneratedColumn()
   id?: number;
-  @Exclude()
-  @CreateDateColumn({ update: false, type: Date })
+  @CreateDateColumn()
   createdAt?: Date;
-  @Exclude()
-  @UpdateDateColumn({ type: Date, insert: false })
+  @UpdateDateColumn()
   @IsOptional()
   updatedAt?: Date;
 }

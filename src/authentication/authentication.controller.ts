@@ -17,8 +17,7 @@ export class AuthenticationController {
       httpOnly: true,
       signed: true,
     });
-    req.res.statusCode = HttpStatus.NO_CONTENT;
-    return;
+    return req.user;
   }
 
   @Get('/session')

@@ -22,7 +22,7 @@ export class ArticleEntity extends AbstractEntity {
   @Column({ nullable: true, default: null })
   body?: string;
 
-  @ManyToOne(() => UserEntity)
+  @ManyToOne(() => UserEntity, { nullable: false })
   @Type(() => UserEntity)
   author: Partial<UserEntity>;
 

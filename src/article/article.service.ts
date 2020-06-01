@@ -31,7 +31,7 @@ export class ArticleService {
     });
   }
   getArticles(query?: GetArticlesQuery): Promise<ArticleEntity[]> {
-    return this.repo.find({ ...query, relations: ['author'] });
+    return this.repo.find({ ...query, relations: ['author', 'poster'] });
   }
   async createArticle(drafteArticle: Partial<ArticleEntity>, author: UserEntity): Promise<ArticleEntity> {
     const articleDraftEntity = this.repo.create(drafteArticle);

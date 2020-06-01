@@ -26,6 +26,7 @@ import { PlainToClassInterceptor } from '../common/interceptors/plain-to-class.i
 import { UserRequestDTO } from 'src/models/user.model';
 
 @Controller('article')
+@UseInterceptors(PlainToClassInterceptor)
 export class ArticleController {
   constructor(private articleService: ArticleService) {}
   @Get(':slugOrId')
