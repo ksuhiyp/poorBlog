@@ -2,7 +2,7 @@ import { Injectable, Logger, HttpException, HttpStatus } from '@nestjs/common';
 import S3 from 'aws-sdk/clients/s3';
 import { ConfigService } from '@nestjs/config';
 import multers3 from 'multer-s3';
-import { MulterModuleOptions, MulterOptionsFactory } from '@nestjs/platform-express';
+import { MulterOptionsFactory } from '@nestjs/platform-express';
 import { MulterOptions } from '@nestjs/platform-express/multer/interfaces/multer-options.interface';
 import { ImageEntity } from 'src/entities/image.entity';
 @Injectable()
