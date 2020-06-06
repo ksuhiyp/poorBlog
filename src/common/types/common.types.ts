@@ -29,16 +29,16 @@ interface MulterFile {
 }
 
 interface MulterS3File extends MulterFile {
-  bucket: string;
-  key: string;
-  acl: string;
-  contentType: string;
-  contentDisposition: null;
-  storageClass: string;
-  serverSideEncryption: null;
-  metadata: any;
-  location: string;
-  etag: string;
+  Bucket: string;
+  Key: string;
+  Acl: string;
+  ContentType: string;
+  ContentDisposition: null;
+  StorageClass: string;
+  ServerSideEncryption: null;
+  Metadata: any;
+  Location: string;
+  Etag: string;
 }
 
 interface ArticlePhotosMulterS3Files {

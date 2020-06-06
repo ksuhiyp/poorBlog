@@ -57,6 +57,10 @@ export class ArticleService {
     });
 
     const posterEntity = this.posterRepo.create(plainToClass(PosterEntity, poster));
+    posterEntity.bucket = poster.Bucket;
+    posterEntity.location = poster.Location;
+    posterEntity.key = poster.Key;
+    
 
     if (article.poster) {
       await this.aws.deleteObject(constatns.bucket, article.poster.key);

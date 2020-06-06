@@ -70,7 +70,7 @@ export class ArticleController {
   @UseInterceptors(FileInterceptor('image'))
   async patchArticleImages(@Param('id') articleId: number, @UploadedFile() image: MulterS3File) {
     const imageData = await this.articleService.patchArticleImages(articleId, image);
-    return { url: imageData.location };
+    return { url: imageData.Location };
   }
 
   @Delete(':id/images')
